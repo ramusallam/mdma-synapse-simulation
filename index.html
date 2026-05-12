@@ -611,19 +611,40 @@ function drawTransporter(ctx, y, active, t, opts = {}) {
   const x = PRE_MEM_X;
   const reversed = opts.reversed || false;
   const blocked = opts.blocked || false;
+  const intensity = opts.intensity || 1;  // exaggerate when reversed and flooding
   ctx.save();
 
   const phase = (t || 0) / 380 + y * 0.04;
+  const fastPhase = (t || 0) / 220 + y * 0.04;
   const breath = (Math.sin(phase) + 1) * 0.5;
 
+  // Big outward jet stream from reversed SERT into cleft
+  if (reversed && active > 0.4) {
+    const jetR = 36 * intensity;
+    for (let i = 0; i < 4; i++) {
+      const off = ((fastPhase * 0.7 + i * 0.25) % 1);
+      const r = 16 + off * (jetR + 10);
+      const a = (1 - off) * 0.32 * active * intensity;
+      const jetX = x + 28 + off * 30;
+      // pink-blue mixed glow
+      const jg = ctx.createRadialGradient(jetX, y, 0, jetX, y, r);
+      jg.addColorStop(0, `rgba(255, 180, 220, ${a})`);
+      jg.addColorStop(0.5, `rgba(150, 200, 255, ${a * 0.7})`);
+      jg.addColorStop(1, 'rgba(140, 180, 240, 0)');
+      ctx.fillStyle = jg;
+      ctx.beginPath(); ctx.arc(jetX, y, r, 0, Math.PI * 2); ctx.fill();
+    }
+  }
+
   if (active > 0.3) {
-    for (let i = 0; i < 3; i++) {
-      const off = ((phase * 0.5 + i * 0.33) % 1);
-      const r = 14 + off * 28;
-      const a = (1 - off) * 0.18 * active;
+    const pulseCount = reversed ? 5 : 3;
+    for (let i = 0; i < pulseCount; i++) {
+      const off = ((phase * 0.5 + i * 0.22) % 1);
+      const r = 14 + off * (reversed ? 42 : 28);
+      const a = (1 - off) * (reversed ? 0.26 : 0.18) * active * intensity;
       const glowColor = reversed ? `rgba(244, 114, 182, ${a})` : `rgba(94, 234, 212, ${a})`;
       ctx.fillStyle = glowColor;
-      ctx.beginPath(); ctx.arc(x + 8, y, r, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(x + (reversed ? 14 : 8), y, r, 0, Math.PI * 2); ctx.fill();
     }
   }
 
@@ -681,32 +702,57 @@ function drawTransporter(ctx, y, active, t, opts = {}) {
   ctx.closePath(); ctx.fill();
 
   if (active > 0.3) {
-    const flow = (phase * 0.8) % 1;
-    for (let i = 0; i < 3; i++) {
-      const f = (flow + i * 0.33) % 1;
-      // reversed = flow outward (from terminal to cleft, left to right)
-      const sx = reversed ? (x - 2 + f * 26) : (x + 22 - f * 26);
-      const a = Math.sin(f * Math.PI) * 0.85 * active;
-      const flowColor = reversed ? `rgba(180, 220, 255, ${a})` : `rgba(180, 255, 240, ${a})`;
+    const flow = (reversed ? (fastPhase * 1.4) : (phase * 0.8)) % 1;
+    const streakCount = reversed ? 6 : 3;
+    for (let i = 0; i < streakCount; i++) {
+      const f = (flow + i * (1 / streakCount)) % 1;
+      // reversed = flow outward (from terminal through pore to cleft)
+      const sx = reversed ? (x - 2 + f * 30) : (x + 22 - f * 26);
+      const a = Math.sin(f * Math.PI) * (reversed ? 1.0 : 0.85) * active;
+      const flowColor = reversed ? `rgba(255, 180, 220, ${a})` : `rgba(180, 255, 240, ${a})`;
       ctx.fillStyle = flowColor;
       ctx.beginPath();
-      ctx.ellipse(sx, y, 3, 1.6, 0, 0, Math.PI * 2);
+      ctx.ellipse(sx, y, reversed ? 4 : 3, reversed ? 2.2 : 1.6, 0, 0, Math.PI * 2);
       ctx.fill();
     }
-    // direction chevron
-    const chevColor = reversed ? `rgba(180, 220, 255, ${0.5 + breath * 0.4})` : `rgba(180, 255, 240, ${0.5 + breath * 0.4})`;
-    ctx.fillStyle = chevColor;
-    ctx.beginPath();
+    // Continuous outflow trail beyond the pore (reversed only)
     if (reversed) {
-      ctx.moveTo(x + 16, y - 5);
-      ctx.lineTo(x + 24, y);
-      ctx.lineTo(x + 16, y + 5);
+      for (let i = 0; i < 4; i++) {
+        const f = ((fastPhase * 1.2 + i * 0.25) % 1);
+        const sx = x + 22 + f * 50;
+        const a = (1 - f) * 0.7 * active;
+        const sg = ctx.createRadialGradient(sx, y, 0, sx, y, 7);
+        sg.addColorStop(0, `rgba(255, 180, 220, ${a})`);
+        sg.addColorStop(1, 'rgba(255, 180, 220, 0)');
+        ctx.fillStyle = sg;
+        ctx.beginPath(); ctx.arc(sx, y, 7, 0, Math.PI * 2); ctx.fill();
+      }
+    }
+    // direction chevron · much bigger and double when reversed
+    const chevColor = reversed ? `rgba(255, 200, 230, ${0.7 + breath * 0.3})` : `rgba(180, 255, 240, ${0.5 + breath * 0.4})`;
+    ctx.fillStyle = chevColor;
+    if (reversed) {
+      // double chevron pointing OUT
+      ctx.beginPath();
+      ctx.moveTo(x + 14, y - 8);
+      ctx.lineTo(x + 26, y);
+      ctx.lineTo(x + 14, y + 8);
+      ctx.closePath(); ctx.fill();
+      ctx.beginPath();
+      ctx.moveTo(x + 26, y - 8);
+      ctx.lineTo(x + 38, y);
+      ctx.lineTo(x + 26, y + 8);
+      ctx.closePath();
+      ctx.globalAlpha = 0.7;
+      ctx.fill();
+      ctx.globalAlpha = 1;
     } else {
+      ctx.beginPath();
       ctx.moveTo(x + 4, y - 5);
       ctx.lineTo(x - 4, y);
       ctx.lineTo(x + 4, y + 5);
+      ctx.closePath(); ctx.fill();
     }
-    ctx.closePath(); ctx.fill();
   }
 
   if (blocked) {
@@ -1040,6 +1086,7 @@ class MDMA {
         this.pathT = 1;
         this.x = this.pathEnd.x; this.y = this.pathEnd.y;
         this.state = this.endState || 'free';
+        if (this.nextConfine) { this.confine = this.nextConfine; this.nextConfine = null; }
         this.vx = (Math.random() - 0.5) * 0.5;
         this.vy = (Math.random() - 0.5) * 0.5;
         return;
@@ -1068,12 +1115,13 @@ class MDMA {
       if (this.x > POST_MEM_X - this.r) { this.x = POST_MEM_X - this.r; this.vx = -Math.abs(this.vx); }
     }
   }
-  setTransit(end, speed, endState) {
+  setTransit(end, speed, endState, nextConfine) {
     this.state = 'transitTo';
     this.pathStart = { x: this.x, y: this.y };
     this.pathEnd = end;
     this.pathT = 0; this.pathSpeed = speed;
     this.endState = endState || 'free';
+    if (nextConfine) this.nextConfine = nextConfine;
   }
   draw(ctx) {
     if (this.state === 'absorbed' || this.state === 'gone') return;
@@ -1626,15 +1674,15 @@ const sceneMDMAEnters = {
 //  SCENE 5: Massive Release + Reversed SERT
 // =====================================================
 const sceneMDMAFlood = {
-  phase: 'Step 5: SERT Reverses · Vesicles Break',
+  phase: 'Step 5: MDMA Breaks Vesicles · SERT Reverses',
   phaseColor: '#f472b6',
-  notes: "Now the cascade: <strong>SERT grabs the MDMA</strong> and pulls it into the terminal. Once inside, MDMA <strong>reverses SERT</strong>. The transporter now runs <strong>backwards</strong>, spitting serotonin OUT into the synapse. MDMA also <strong>breaks the vesicles open</strong>, dumping their serotonin into the terminal where SERT can pump it out too. The synapse <strong>floods</strong> with serotonin.",
-  notebook: "Draw the MDMA being pulled into SERT. Flip the SERT arrows so they point <strong>OUT into the cleft</strong>. Then draw vesicles <strong>BREAKING OPEN</strong> inside the terminal. Write: <strong>SERT reversed + vesicles burst → serotonin flood</strong>.",
+  notes: "Watch the full cascade. <strong>MDMA travels through SERT INTO the presynaptic terminal</strong>. Once inside, MDMA molecules <strong>collide with vesicles and break them open</strong>, scattering serotonin throughout the terminal. Then MDMA <strong>reverses SERT</strong>. The transporter now runs hard <strong>backwards</strong>, spitting <strong>both serotonin and MDMA</strong> OUT into the synapse in a continuous stream. The cleft <strong>floods</strong> with serotonin.",
+  notebook: "Draw MDMA going THROUGH the SERT into the terminal. Inside, draw MDMA molecules <strong>colliding with vesicles → vesicles BURST</strong>. Then draw SERT pumping <strong>OUT</strong> in a thick stream of serotonin AND MDMA. Label the flooded cleft: <strong>serotonin overload</strong>.",
   setup() {
     clearField();
-    // MDMA starts already in the cleft (continues from Step 4)
+    // MDMA starts in cleft, will be pulled THROUGH SERT into terminal
     const mdmas = [];
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 8; i++) {
       const m = new MDMA(
         PRE_MEM_X + 20 + Math.random() * (POST_MEM_X - PRE_MEM_X - 40),
         ACT_TOP + 20 + Math.random() * (ACT_BOT - ACT_TOP - 40)
@@ -1642,114 +1690,120 @@ const sceneMDMAFlood = {
       m.confine = 'cleft';
       mdmas.push(m);
     }
-    // Vesicles arranged inside the terminal, will burst sequentially
     const ves = VESICLE_POSITIONS.map(p => new Vesicle(p.x, p.y));
     sceneLocal = {
       mdmas,
       vesicles: ves,
-      nts: [],
-      ntsInTerminal: [],   // serotonin spawned inside terminal by bursting vesicles
+      nts: [],                 // serotonin in cleft
+      ntsInTerminal: [],       // serotonin inside terminal (from broken vesicles)
       cycleT: 0,
       sertReversed: 0,
-      mdmaCaptured: 0,
-      vesicleBurstIdx: 0,
-      nextBurstAt: 2500,
-      nextPumpAt: 3000,
-      lastMDMASpawnAt: 0
+      mdmasEnteredTerminal: 0,
+      lastMDMASpawnAt: 0,
+      headerState: 'arriving'
     };
   },
   update(dt) {
     sceneLocal.cycleT += dt;
     const t = sceneLocal.cycleT;
 
-    // Phase A (0 .. 2200ms): MDMA in cleft drifts toward SERT
+    // ─── MDMA in CLEFT heads to SERT and transits THROUGH into terminal ───
     sceneLocal.mdmas.forEach(m => {
-      if (m.state === 'free' && t > 400 + Math.random() * 200) {
-        // pick a SERT and head there
-        const ty = TRANS_YS[Math.floor(Math.random() * TRANS_YS.length)];
+      if (m.state === 'free' && m.confine === 'cleft' && t > 300) {
+        const ty = TRANS_YS.reduce((best, cur) => Math.abs(cur - m.y) < Math.abs(best - m.y) ? cur : best, TRANS_YS[0]);
         const dist = Math.hypot(m.x - (PRE_MEM_X + 10), m.y - ty);
-        if (dist < 60 && Math.random() < 0.02) {
-          m.setTransit({ x: PRE_MEM_X - 10, y: ty }, 1.6 / 1000, 'absorbed');
-          sceneLocal.mdmaCaptured++;
-        } else if (m.state === 'free' && Math.random() < 0.012 && t > 600) {
-          // gentle drift toward nearest SERT
-          const dy = ty - m.y;
+        if (dist < 50 && Math.random() < 0.03) {
+          // Transit through SERT into terminal interior
+          m.setTransit({ x: PRE_MEM_X - 50 - Math.random() * 60, y: ty + (Math.random() - 0.5) * 30 }, 1.4 / 1000, 'free', 'terminal');
+          sceneLocal.mdmasEnteredTerminal++;
+        } else if (Math.random() < 0.02) {
           const dx = (PRE_MEM_X + 10) - m.x;
+          const dy = ty - m.y;
           const d = Math.hypot(dx, dy);
-          if (d > 0) { m.vx += dx / d * 0.18; m.vy += dy / d * 0.18; }
+          if (d > 0) { m.vx += dx / d * 0.25; m.vy += dy / d * 0.25; }
         }
       }
       m.update(dt);
     });
 
-    // SERT reversal kicks in once enough MDMA has been absorbed
-    if (sceneLocal.mdmaCaptured >= 3) {
-      sceneLocal.sertReversed = Math.min(1, sceneLocal.sertReversed + dt / 800);
+    // SERT reversal builds up once MDMA is inside the terminal
+    if (sceneLocal.mdmasEnteredTerminal >= 2) {
+      sceneLocal.sertReversed = Math.min(1, sceneLocal.sertReversed + dt / 900);
     }
 
-    // Phase B (kicks off after sertReversed > 0.4): vesicles burst one at a time
-    if (sceneLocal.sertReversed > 0.4 && t > sceneLocal.nextBurstAt) {
-      if (sceneLocal.vesicleBurstIdx < sceneLocal.vesicles.length) {
-        const v = sceneLocal.vesicles[sceneLocal.vesicleBurstIdx];
-        v.burst();
-        // spawn loose serotonin inside the terminal at burst location
-        for (let j = 0; j < 5; j++) {
-          const n = new NT(v.x + (Math.random() - 0.5) * 30, v.y + (Math.random() - 0.5) * 30);
-          n.vx = (Math.random() - 0.5) * 1.2;
-          n.vy = (Math.random() - 0.5) * 1.2;
-          n.inTerminal = true;
-          sceneLocal.ntsInTerminal.push(n);
+    // ─── MDMA INSIDE terminal collides with vesicles and breaks them ───
+    sceneLocal.mdmas.forEach(m => {
+      if (m.state !== 'free' || m.confine !== 'terminal') return;
+      // collide with intact vesicles
+      for (const v of sceneLocal.vesicles) {
+        if (v.state === 'rest' || v.state === 'docking') {
+          const d = Math.hypot(m.x - v.x, m.y - v.y);
+          if (d < v.r + m.r + 2) {
+            v.burst();
+            // scatter serotonin from inside the vesicle
+            for (let j = 0; j < 6; j++) {
+              const n = new NT(v.x + (Math.random() - 0.5) * 14, v.y + (Math.random() - 0.5) * 14);
+              n.vx = (Math.random() - 0.5) * 1.6;
+              n.vy = (Math.random() - 0.5) * 1.6;
+              n.inTerminal = true;
+              sceneLocal.ntsInTerminal.push(n);
+            }
+            // bounce MDMA away
+            m.vx += (m.x - v.x) * 0.08;
+            m.vy += (m.y - v.y) * 0.08;
+            break;
+          }
         }
-        sceneLocal.vesicleBurstIdx++;
-        sceneLocal.nextBurstAt = t + 500 + Math.random() * 400;
       }
-    }
+      // once SERT is reversed and there's been time inside, MDMA also gets pumped back OUT
+      if (sceneLocal.sertReversed > 0.6 && Math.random() < 0.008) {
+        const ty = TRANS_YS[Math.floor(Math.random() * TRANS_YS.length)];
+        m.setTransit({ x: PRE_MEM_X + 60 + Math.random() * 60, y: ty + (Math.random() - 0.5) * 20 }, 1.4 / 1000, 'free', 'cleft');
+      }
+    });
 
-    // serotonin inside the terminal drifts toward SERT and gets pumped OUT
+    // ─── Serotonin INSIDE terminal drifts to SERT, gets pumped OUT ───
     sceneLocal.ntsInTerminal.forEach(n => {
       if (n.state === 'free') {
-        // confine to terminal
         if (n.x < 290) { n.x = 290; n.vx = Math.abs(n.vx); }
         if (n.x > PRE_MEM_X - 14) { n.x = PRE_MEM_X - 14; n.vx = -Math.abs(n.vx); }
         if (n.y < ACT_TOP + 14) { n.y = ACT_TOP + 14; n.vy = Math.abs(n.vy); }
         if (n.y > ACT_BOT - 14) { n.y = ACT_BOT - 14; n.vy = -Math.abs(n.vy); }
-        // gentle drift toward a SERT
-        if (Math.random() < 0.04) {
-          const ty = TRANS_YS[Math.floor(Math.random() * TRANS_YS.length)];
+        if (sceneLocal.sertReversed > 0.4 && Math.random() < 0.06) {
+          const ty = TRANS_YS.reduce((best, cur) => Math.abs(cur - n.y) < Math.abs(best - n.y) ? cur : best, TRANS_YS[0]);
           const dx = (PRE_MEM_X - 10) - n.x;
           const dy = ty - n.y;
           const d = Math.hypot(dx, dy);
-          if (d > 0) { n.vx += dx / d * 0.18; n.vy += dy / d * 0.18; }
+          if (d > 0) { n.vx += dx / d * 0.25; n.vy += dy / d * 0.25; }
         }
-        // when close to SERT, transit through and pop out into cleft
-        for (const ty of TRANS_YS) {
-          if (Math.abs(n.y - ty) < 18 && Math.abs(n.x - (PRE_MEM_X - 10)) < 14 && sceneLocal.sertReversed > 0.5) {
-            n.setTransit({ x: PRE_MEM_X + 30, y: ty + (Math.random() - 0.5) * 12 }, 1.6 / 1000, 'free');
-            n.inTerminal = false;
-            break;
+        // close to SERT and reversed? transit OUT to cleft
+        if (sceneLocal.sertReversed > 0.5) {
+          for (const ty of TRANS_YS) {
+            if (Math.abs(n.y - ty) < 18 && Math.abs(n.x - (PRE_MEM_X - 10)) < 16) {
+              n.setTransit({ x: PRE_MEM_X + 50 + Math.random() * 50, y: ty + (Math.random() - 0.5) * 16 }, 1.5 / 1000, 'free');
+              n.inTerminal = false;
+              break;
+            }
           }
         }
       }
       n.update(dt);
     });
 
-    // Also let reversed SERT keep spawning fresh serotonin into cleft at a slower rate (the "ongoing flood")
-    if (sceneLocal.sertReversed > 0.6 && t > sceneLocal.nextPumpAt) {
-      const ty = TRANS_YS[Math.floor(Math.random() * TRANS_YS.length)];
-      const n = new NT(PRE_MEM_X + 25, ty + (Math.random() - 0.5) * 10);
-      n.vx = 0.7 + Math.random() * 0.4;
-      n.vy = (Math.random() - 0.5) * 0.5;
-      sceneLocal.nts.push(n);
-      sceneLocal.nextPumpAt = t + 200 + Math.random() * 250;
-    }
+    // After transit out, NT becomes a cleft particle
+    sceneLocal.ntsInTerminal = sceneLocal.ntsInTerminal.filter(n => {
+      if (!n.inTerminal && n.state === 'free' && n.x > PRE_MEM_X + 30) {
+        sceneLocal.nts.push(n);
+        return false;
+      }
+      return n.state !== 'recycled' && n.state !== 'gone';
+    });
 
-    // serotonin in cleft drifts (free particles)
     sceneLocal.nts.forEach(n => n.update(dt));
-
     sceneLocal.vesicles.forEach(v => v.update(dt));
 
-    // refresh MDMA so the scene keeps showing arrival → capture loop
-    if (t - sceneLocal.lastMDMASpawnAt > 1400 && sceneLocal.mdmas.filter(m => m.state === 'free' || m.state === 'transitTo').length < 6) {
+    // Keep feeding MDMA in from outside so the loop reads "ongoing"
+    if (t - sceneLocal.lastMDMASpawnAt > 1100 && sceneLocal.mdmas.filter(m => m.state !== 'gone').length < 14) {
       const m = new MDMA(
         PRE_MEM_X + 20 + Math.random() * (POST_MEM_X - PRE_MEM_X - 40),
         -30 - Math.random() * 30
@@ -1759,15 +1813,20 @@ const sceneMDMAFlood = {
         x: PRE_MEM_X + 20 + Math.random() * (POST_MEM_X - PRE_MEM_X - 40),
         y: ACT_TOP + 30 + Math.random() * (ACT_BOT - ACT_TOP - 60)
       }, 0.5 / 1000, 'free');
+      m.nextConfine = 'cleft';
       sceneLocal.mdmas.push(m);
       sceneLocal.lastMDMASpawnAt = t;
     }
 
-    // cap cleft NT count so it doesn't grow forever
-    while (sceneLocal.nts.length > 75) sceneLocal.nts.shift();
-    // clean up gone particles
-    sceneLocal.ntsInTerminal = sceneLocal.ntsInTerminal.filter(n => !(n.state === 'recycled' || n.state === 'gone'));
+    // Cap counts so memory doesn't grow
+    while (sceneLocal.nts.length > 90) sceneLocal.nts.shift();
     sceneLocal.mdmas = sceneLocal.mdmas.filter(m => m.state !== 'gone');
+
+    // Header state machine
+    if (sceneLocal.mdmasEnteredTerminal < 1) sceneLocal.headerState = 'arriving';
+    else if (sceneLocal.sertReversed < 0.4) sceneLocal.headerState = 'entering';
+    else if (sceneLocal.ntsInTerminal.length > 0 && sceneLocal.nts.length < 25) sceneLocal.headerState = 'breaking';
+    else sceneLocal.headerState = 'flooding';
   },
   draw(ctx, t) {
     ctx.fillStyle = '#0a0a0a';
@@ -1775,44 +1834,81 @@ const sceneMDMAFlood = {
     drawPresynapticTerminal(ctx);
     drawPostsynapticDendrite(ctx);
 
-    // pink tint in cleft while MDMA is around
+    // Flood intensity drives the visual saturation in the cleft
+    const fillRatio = Math.min(1, sceneLocal.nts.length / 55);
+
+    // Cleft background tint: pink early, blue+pink flood late
     const cleftG = ctx.createLinearGradient(PRE_MEM_X, 0, POST_MEM_X, 0);
-    cleftG.addColorStop(0, 'rgba(244, 114, 182, 0.05)');
-    cleftG.addColorStop(0.5, 'rgba(244, 114, 182, 0.12)');
-    cleftG.addColorStop(1, 'rgba(244, 114, 182, 0.05)');
+    if (fillRatio > 0.3) {
+      cleftG.addColorStop(0, `rgba(92, 201, 255, ${0.08 + fillRatio * 0.18})`);
+      cleftG.addColorStop(0.5, `rgba(140, 180, 240, ${0.14 + fillRatio * 0.25})`);
+      cleftG.addColorStop(1, `rgba(92, 201, 255, ${0.10 + fillRatio * 0.22})`);
+    } else {
+      cleftG.addColorStop(0, 'rgba(244, 114, 182, 0.06)');
+      cleftG.addColorStop(0.5, 'rgba(244, 114, 182, 0.14)');
+      cleftG.addColorStop(1, 'rgba(244, 114, 182, 0.06)');
+    }
     ctx.fillStyle = cleftG;
     ctx.fillRect(PRE_MEM_X, ACT_TOP - 20, POST_MEM_X - PRE_MEM_X, ACT_BOT - ACT_TOP + 40);
 
+    // "Flood region" outline that grows brighter as serotonin piles up
+    if (fillRatio > 0.4) {
+      ctx.save();
+      ctx.strokeStyle = `rgba(92, 201, 255, ${0.3 + fillRatio * 0.4})`;
+      ctx.lineWidth = 2;
+      ctx.setLineDash([6, 4]);
+      ctx.strokeRect(PRE_MEM_X + 4, ACT_TOP - 6, POST_MEM_X - PRE_MEM_X - 8, ACT_BOT - ACT_TOP + 12);
+      ctx.setLineDash([]);
+      ctx.restore();
+    }
+
     sceneLocal.vesicles.forEach(v => v.draw(ctx));
-    // serotonin inside the terminal (from bursts)
     sceneLocal.ntsInTerminal.forEach(n => n.draw(ctx));
     CA_CHANNEL_YS.forEach(y => drawCalciumChannel(ctx, y, 0));
-    TRANS_YS.forEach(y => drawTransporter(ctx, y, Math.max(0.6, sceneLocal.sertReversed), t, { reversed: sceneLocal.sertReversed > 0.5 }));
+    const sertActive = Math.max(0.6, sceneLocal.sertReversed);
+    const sertIntensity = 1 + fillRatio * 0.8;
+    TRANS_YS.forEach(y => drawTransporter(ctx, y, sertActive, t, {
+      reversed: sceneLocal.sertReversed > 0.5,
+      intensity: sertIntensity
+    }));
     RECEPTOR_YS.forEach(y => drawReceptor(ctx, y, 0));
     sceneLocal.mdmas.forEach(m => m.draw(ctx));
     sceneLocal.nts.forEach(n => n.draw(ctx));
 
-    // staged header
+    // FLOOD callout when cleft is full
+    if (fillRatio > 0.6) {
+      ctx.save();
+      ctx.fillStyle = `rgba(92, 201, 255, ${0.85})`;
+      ctx.font = '900 18px -apple-system, system-ui';
+      ctx.textAlign = 'center';
+      ctx.fillText('SEROTONIN FLOOD', CLEFT_MID, ACT_TOP - 30);
+      ctx.restore();
+    }
+
+    // Staged header
     ctx.save();
     ctx.font = '700 16px -apple-system, system-ui';
     ctx.textAlign = 'center';
-    if (sceneLocal.sertReversed < 0.4) {
+    if (sceneLocal.headerState === 'arriving') {
       ctx.fillStyle = C_MDMA;
-      ctx.fillText('SERT grabs MDMA and pulls it IN →', 540, 50);
-    } else if (sceneLocal.vesicleBurstIdx < 3) {
+      ctx.fillText('MDMA heads for SERT in the synapse', 540, 50);
+    } else if (sceneLocal.headerState === 'entering') {
+      ctx.fillStyle = C_MDMA;
+      ctx.fillText('MDMA pulled THROUGH SERT into the terminal →', 540, 50);
+    } else if (sceneLocal.headerState === 'breaking') {
       ctx.fillStyle = '#ffd166';
-      ctx.fillText('vesicles BREAK open inside the terminal', 540, 50);
+      ctx.fillText('MDMA collides with vesicles → vesicles BREAK', 540, 50);
     } else {
       ctx.fillStyle = C_MDMA;
-      ctx.fillText('SERT REVERSED · serotonin pumped OUT into the cleft', 540, 50);
+      ctx.fillText('SERT REVERSED · pumping serotonin + MDMA OUT', 540, 50);
     }
     ctx.restore();
 
     if (sceneLocal.sertReversed > 0.5) {
-      drawLabel(ctx, 'SERT reversed: flowing OUT', 1100, 540, 740, 375, C_MDMA);
+      drawLabel(ctx, 'SERT reversed: streaming OUT', 1100, 540, 750, 375, C_MDMA);
     }
-    if (sceneLocal.vesicleBurstIdx > 0) {
-      drawLabel(ctx, 'vesicles breaking', 280, 110, 460, 270, '#ffd166');
+    if (sceneLocal.ntsInTerminal.length > 0) {
+      drawLabel(ctx, 'vesicles broken', 280, 110, 460, 270, '#ffd166');
     }
   }
 };

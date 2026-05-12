@@ -1,0 +1,2149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Neuroscience of Ecstasy (MDMA)</title>
+<style>
+  :root {
+    --bg-0: #0a0a0a;
+    --bg-1: #141414;
+    --ink-hi: #f5f5f5;
+    --ink-mid: #a0a0a0;
+    --ink-low: #6b7280;
+    --ca: #4ade80;
+    --nt: #5cc9ff;
+    --mdma: #f472b6;
+    --transporter: #5eead4;
+    --receptor: #b084ff;
+    --accent: #6366f1;
+    --panel: #141414;
+    --panel-border: rgba(255,255,255,0.10);
+    --note-bg: #fdf1c6;
+    --note-ink: #2a1e08;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+    background: var(--bg-0);
+    color: var(--ink-hi);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  header {
+    padding: 14px 32px;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  header .title {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--ink-low);
+  }
+  header .title strong { color: var(--ink-hi); font-weight: 700; }
+  .step-indicator {
+    font-size: 13px;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink-low);
+    letter-spacing: 1px;
+  }
+  main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 32px 20px;
+  }
+  .brand-banner {
+    margin: 0 auto 14px;
+    padding: 10px 18px;
+    background: linear-gradient(90deg, rgba(244, 114, 182, 0.10), rgba(99, 102, 241, 0.08));
+    border: 1px solid rgba(244, 114, 182, 0.18);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 13px;
+    line-height: 1.4;
+    color: #cfc5aa;
+  }
+  .brand-banner .bb-tag {
+    flex-shrink: 0;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    padding: 5px 10px;
+    background: rgba(244, 114, 182, 0.2);
+    color: #f9a8d4;
+    border-radius: 5px;
+  }
+  .brand-banner strong { color: #f9a8d4; font-weight: 700; }
+  .stage {
+    position: relative;
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow:
+      0 30px 80px rgba(0,0,0,0.5),
+      inset 0 1px 0 rgba(255,255,255,0.04);
+  }
+  canvas { display: block; width: 100%; height: auto; }
+  .phase-bar {
+    padding: 16px 28px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 24px;
+    align-items: center;
+    border-top: 1px solid var(--panel-border);
+    background: rgba(5, 8, 20, 0.4);
+  }
+  .phase-name {
+    font-size: 23px;
+    font-weight: 700;
+    letter-spacing: 0.1px;
+    color: var(--accent);
+    transition: color 400ms ease;
+  }
+  .sim-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 250ms ease;
+  }
+  .sim-controls.visible { opacity: 1; pointer-events: auto; }
+  .sim-controls .sim-readout {
+    font-size: 14px;
+    color: var(--ink-mid);
+    letter-spacing: 0.2px;
+    min-width: 180px;
+    text-align: right;
+  }
+  .sim-controls .sim-readout strong {
+    color: var(--mdma);
+    font-variant-numeric: tabular-nums;
+    font-size: 16px;
+  }
+  .sim-controls button.sim-btn {
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 1px solid rgba(244, 114, 182, 0.35);
+    background: rgba(244, 114, 182, 0.08);
+    color: #f9a8d4;
+    cursor: pointer;
+    transition: background 150ms, border-color 150ms;
+  }
+  .sim-controls button.sim-btn:hover { background: rgba(244, 114, 182, 0.18); border-color: rgba(244, 114, 182, 0.6); }
+  .content { margin-top: 14px; }
+  .notes-card {
+    background: var(--note-bg);
+    color: var(--note-ink);
+    padding: 16px 22px 14px;
+    border-radius: 12px;
+    font-size: 15px;
+    line-height: 1.55;
+    position: relative;
+    box-shadow:
+      0 14px 40px rgba(255, 209, 102, 0.08),
+      inset 0 0 0 1px rgba(0,0,0,0.02);
+  }
+  .step-heading {
+    font-weight: 700;
+    font-size: 16px;
+    color: #7a3a00;
+    margin-bottom: 4px;
+    letter-spacing: 0.2px;
+  }
+  .notes-card p { margin: 0 0 6px; }
+  .notes-card strong { font-weight: 700; color: #2a1e08; }
+
+  .notebook-prompt {
+    margin-top: 10px;
+    padding: 12px 16px;
+    background: linear-gradient(90deg, rgba(255, 209, 102, 0.15), rgba(244, 114, 182, 0.12));
+    border: 1.5px solid rgba(255, 209, 102, 0.45);
+    border-left: 5px solid #ffd166;
+    border-radius: 10px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #f3d589;
+  }
+  .notebook-prompt .np-tag {
+    flex-shrink: 0;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    padding: 4px 9px;
+    background: #ffd166;
+    color: #2a1e08;
+    border-radius: 5px;
+    margin-top: 1px;
+  }
+  .notebook-prompt strong { color: #ffd166; font-weight: 700; }
+
+  .closing-panel {
+    margin-top: 18px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+  }
+  .closing-card {
+    padding: 16px 18px;
+    border-radius: 12px;
+    border: 1px solid var(--panel-border);
+    background: var(--panel);
+    font-size: 13px;
+    line-height: 1.55;
+    color: #cbd5e1;
+  }
+  .closing-card h4 {
+    margin: 0 0 10px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .closing-card.takeaway { border-color: rgba(74, 222, 128, 0.35); }
+  .closing-card.takeaway h4 { color: #4ade80; }
+  .closing-card.risks { border-color: rgba(244, 114, 182, 0.35); }
+  .closing-card.risks h4 { color: #f472b6; }
+  .closing-card.important { border-color: rgba(255, 209, 102, 0.35); }
+  .closing-card.important h4 { color: #ffd166; }
+  .closing-card ul { margin: 0; padding-left: 18px; }
+  .closing-card li { margin-bottom: 6px; }
+
+  .footer-tag {
+    margin-top: 18px;
+    padding: 14px 22px;
+    border-radius: 10px;
+    background: linear-gradient(90deg, rgba(99, 102, 241, 0.10), rgba(244, 114, 182, 0.08));
+    border: 1px solid rgba(99, 102, 241, 0.18);
+    text-align: center;
+    font-size: 13px;
+    color: #cbd5e1;
+    line-height: 1.6;
+  }
+  .footer-tag .ft-headline {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: #f5f5f5;
+    margin-bottom: 4px;
+  }
+  .footer-tag a { color: #a5b4fc; text-decoration: none; }
+  .footer-tag a:hover { text-decoration: underline; }
+
+  nav {
+    margin-top: 14px;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  button {
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.03);
+    color: var(--ink-hi);
+    cursor: pointer;
+    transition: background 150ms, transform 50ms, border-color 150ms;
+  }
+  button:hover:not(:disabled) {
+    background: rgba(255,255,255,0.06);
+    border-color: rgba(255,255,255,0.15);
+  }
+  button:active:not(:disabled) { transform: translateY(1px); }
+  button:disabled { opacity: 0.3; cursor: not-allowed; }
+  button.primary {
+    background: linear-gradient(180deg, #6366f1 0%, #4f46e5 100%);
+    color: #f5f5ff;
+    border-color: rgba(99, 102, 241, 0.55);
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.25);
+  }
+  button.primary:hover { filter: brightness(1.08); }
+  .btn-group { display: flex; gap: 10px; }
+  @media (max-width: 720px) {
+    .phase-bar { grid-template-columns: 1fr; }
+    .sim-controls { justify-content: space-between; }
+    .phase-name { font-size: 20px; }
+    .closing-panel { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="title"><strong>Synapse Science Co.</strong> · The Neuroscience of Ecstasy (MDMA)</div>
+  <div class="step-indicator" id="stepIndicator">01 / 09</div>
+</header>
+
+<main>
+  <div class="brand-banner">
+    <div class="bb-tag">PUBLIC GUIDE</div>
+    <div>Understanding the brain. Empowering choices. <strong>Active ingredient:</strong> 3,4-methylenedioxymethamphetamine (MDMA).</div>
+  </div>
+
+  <div class="stage">
+    <canvas id="canvas" width="1600" height="650"></canvas>
+    <div class="phase-bar">
+      <div class="phase-name" id="phaseName">Step 1</div>
+      <div class="sim-controls" id="simControls">
+        <button class="sim-btn" id="mdmaPlusBtn">+ Add MDMA</button>
+        <div class="sim-readout" id="simReadout">MDMA in system: <strong>0</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="notes-card">
+      <div class="step-heading" id="stepHeading">Step 1</div>
+      <p id="notes"></p>
+    </div>
+    <div class="notebook-prompt" id="notebookPrompt">
+      <div class="np-tag">✎ NOTES</div>
+      <div id="notebookText"></div>
+    </div>
+  </div>
+
+  <div id="closingPanel" class="closing-panel" style="display:none;">
+    <div class="closing-card takeaway">
+      <h4>Key Takeaways</h4>
+      <ul>
+        <li>MDMA powerfully increases <strong>serotonin</strong> in the synapse.</li>
+        <li>The brain compensates over time, leading to <strong>tolerance</strong>.</li>
+        <li>When the drug is removed, serotonin systems take time to recover, causing <strong>withdrawal</strong>.</li>
+        <li>Frequent or high use increases the risk of lasting problems with mood, memory, and emotional regulation.</li>
+      </ul>
+    </div>
+    <div class="closing-card risks">
+      <h4>Long-Term Risks</h4>
+      <ul>
+        <li>Changes in mood and emotional regulation</li>
+        <li>Memory and learning problems</li>
+        <li>Sleep disturbances</li>
+        <li>Possible long-term damage to serotonin systems</li>
+        <li>Increased risk of anxiety and depression</li>
+      </ul>
+    </div>
+    <div class="closing-card important">
+      <h4>Important to Know</h4>
+      <ul>
+        <li>Effects vary with dose, frequency, environment, genetics, and mental health.</li>
+        <li>Hydration, avoiding overheating, and spacing uses can reduce (but not eliminate) risks.</li>
+        <li>If you or someone you know is struggling, <strong>help is available</strong>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div id="footerTag" class="footer-tag" style="display:none;">
+    <div class="ft-headline">KNOW THE SCIENCE. PROTECT YOUR BRAIN.</div>
+    <div>Informed choices lead to safer experiences.</div>
+    <div style="margin-top:8px;font-size:12px;color:#94a3b8;">For help or more information: <a href="https://www.drugabuse.gov" target="_blank" rel="noopener">www.drugabuse.gov</a> · National Institute on Drug Abuse (NIDA)</div>
+  </div>
+
+  <nav>
+    <button id="resetBtn">Start Over</button>
+    <div class="btn-group">
+      <button id="prevBtn">← Back</button>
+      <button id="nextBtn" class="primary">Next →</button>
+    </div>
+  </nav>
+</main>
+
+<script>
+// =====================================================
+//  Canvas setup
+// =====================================================
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+const W = canvas.width;
+const H = canvas.height;
+const MID = H / 2;
+
+const PRE_MEM_X = 720;
+const POST_MEM_X = 880;
+const CLEFT_MID = (PRE_MEM_X + POST_MEM_X) / 2;
+const ACT_TOP = 215;
+const ACT_BOT = 435;
+
+// Domain colors
+const C_NT = '#5cc9ff';            // serotonin (blue per poster)
+const C_NT_GLOW = 'rgba(92, 201, 255,';
+const C_CA = '#4ade80';
+const C_CA_GLOW = 'rgba(74, 222, 128,';
+const C_MDMA = '#f472b6';
+const C_MDMA_GLOW = 'rgba(244, 114, 182,';
+const C_TRANS = '#5eead4';
+const C_TRANS_GLOW = 'rgba(94, 234, 212,';
+const C_RECEPTOR = '#b084ff';
+
+// =====================================================
+//  Helpers
+// =====================================================
+function lerp(a, b, t) { return a + (b - a) * t; }
+function clamp(v, a, b) { return v < a ? a : v > b ? b : v; }
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+
+let animT = 0;
+
+// =====================================================
+//  Terminals
+// =====================================================
+function drawPresynapticTerminal(ctx) {
+  const cx = 470, cy = MID;
+  ctx.save();
+  ctx.strokeStyle = '#c78373';
+  ctx.lineWidth = 36;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(0, MID); ctx.lineTo(220, MID); ctx.stroke();
+  ctx.strokeStyle = 'rgba(255, 220, 208, 0.3)';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(0, MID - 14); ctx.lineTo(220, MID - 14); ctx.stroke();
+
+  const glow = ctx.createRadialGradient(cx, cy, 0, cx, cy, 380);
+  glow.addColorStop(0, 'rgba(245, 208, 197, 0.10)');
+  glow.addColorStop(1, 'rgba(245, 208, 197, 0)');
+  ctx.fillStyle = glow;
+  ctx.beginPath(); ctx.arc(cx, cy, 380, 0, Math.PI * 2); ctx.fill();
+
+  const fill = ctx.createRadialGradient(cx - 50, cy - 60, 20, cx, cy, 300);
+  fill.addColorStop(0, '#f8d9ce');
+  fill.addColorStop(0.5, '#d49a8d');
+  fill.addColorStop(1, '#a86456');
+  ctx.fillStyle = fill;
+  ctx.beginPath();
+  ctx.moveTo(200, MID - 20);
+  ctx.bezierCurveTo(260, MID - 32, 290, MID - 70, 320, MID - 130);
+  ctx.bezierCurveTo(360, MID - 200, 510, MID - 230, 620, MID - 200);
+  ctx.bezierCurveTo(690, MID - 175, 720, MID - 145, 720, MID - 110);
+  ctx.lineTo(720, MID + 110);
+  ctx.bezierCurveTo(720, MID + 145, 690, MID + 175, 620, MID + 200);
+  ctx.bezierCurveTo(510, MID + 230, 360, MID + 200, 320, MID + 130);
+  ctx.bezierCurveTo(290, MID + 70, 260, MID + 32, 200, MID + 20);
+  ctx.closePath();
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(140, 75, 60, 0.5)';
+  ctx.lineWidth = 2; ctx.stroke();
+
+  ctx.strokeStyle = 'rgba(212, 165, 84, 0.85)';
+  ctx.lineWidth = 4;
+  ctx.beginPath();
+  ctx.moveTo(720, MID - 110); ctx.lineTo(720, MID + 110); ctx.stroke();
+  ctx.restore();
+}
+
+function drawPostsynapticDendrite(ctx) {
+  const cx = 1130, cy = MID;
+  ctx.save();
+  ctx.strokeStyle = '#7da3d6';
+  ctx.lineWidth = 36;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(W - 220, MID); ctx.lineTo(W, MID); ctx.stroke();
+  ctx.strokeStyle = 'rgba(200, 220, 255, 0.3)';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(W - 220, MID - 14); ctx.lineTo(W, MID - 14); ctx.stroke();
+
+  const glow = ctx.createRadialGradient(cx, cy, 0, cx, cy, 380);
+  glow.addColorStop(0, 'rgba(125, 163, 214, 0.10)');
+  glow.addColorStop(1, 'rgba(125, 163, 214, 0)');
+  ctx.fillStyle = glow;
+  ctx.beginPath(); ctx.arc(cx, cy, 380, 0, Math.PI * 2); ctx.fill();
+
+  const fill = ctx.createRadialGradient(cx + 50, cy - 60, 20, cx, cy, 300);
+  fill.addColorStop(0, '#c4d9f0');
+  fill.addColorStop(0.5, '#7da3d6');
+  fill.addColorStop(1, '#4a6e9e');
+  ctx.fillStyle = fill;
+  ctx.beginPath();
+  ctx.moveTo(W - 200, MID - 20);
+  ctx.bezierCurveTo(W - 260, MID - 32, W - 290, MID - 70, W - 320, MID - 130);
+  ctx.bezierCurveTo(W - 360, MID - 200, W - 510, MID - 230, W - 620, MID - 200);
+  ctx.bezierCurveTo(W - 690, MID - 175, W - 720, MID - 145, W - 720, MID - 110);
+  ctx.lineTo(880, MID + 110);
+  ctx.bezierCurveTo(W - 720, MID + 145, W - 690, MID + 175, W - 620, MID + 200);
+  ctx.bezierCurveTo(W - 510, MID + 230, W - 360, MID + 200, W - 320, MID + 130);
+  ctx.bezierCurveTo(W - 290, MID + 70, W - 260, MID + 32, W - 200, MID + 20);
+  ctx.closePath();
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(50, 80, 130, 0.5)';
+  ctx.lineWidth = 2; ctx.stroke();
+
+  ctx.strokeStyle = 'rgba(212, 165, 84, 0.85)';
+  ctx.lineWidth = 4;
+  ctx.beginPath();
+  ctx.moveTo(880, MID - 110); ctx.lineTo(880, MID + 110); ctx.stroke();
+  ctx.restore();
+}
+
+// =====================================================
+//  Synapse parts
+// =====================================================
+function drawCalciumChannel(ctx, y, openness) {
+  const x = PRE_MEM_X;
+  const halfH = 26;
+  ctx.save();
+  const base = ctx.createLinearGradient(x - 18, 0, x + 18, 0);
+  base.addColorStop(0, 'rgba(20, 35, 25, 0.95)');
+  base.addColorStop(0.5, 'rgba(15, 25, 20, 0.98)');
+  base.addColorStop(1, 'rgba(20, 35, 25, 0.95)');
+  ctx.fillStyle = base;
+  roundRect(ctx, x - 22, y - halfH, 44, halfH * 2, 8);
+  ctx.fill();
+  ctx.strokeStyle = openness > 0.3 ? C_CA : 'rgba(120, 200, 150, 0.45)';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  const gap = openness * 14;
+  ctx.fillStyle = openness > 0.3 ? `rgba(74, 222, 128, ${0.55 + openness * 0.4})` : 'rgba(74, 222, 128, 0.28)';
+  ctx.beginPath(); ctx.ellipse(x - 12 + gap, y - halfH + 9, 8, 6, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(x + 12 - gap, y + halfH - 9, 8, 6, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = 'rgba(74, 222, 128, 0.95)';
+  ctx.font = '700 11px -apple-system, system-ui';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('Ca²⁺', x, y);
+  ctx.restore();
+}
+
+function drawReceptor(ctx, y, boundFraction, opts = {}) {
+  const x = POST_MEM_X;
+  const size = opts.size || 1;
+  ctx.save();
+
+  const trunkGrad = ctx.createLinearGradient(x, 0, x + 22, 0);
+  trunkGrad.addColorStop(0, 'rgba(90, 65, 140, 0.98)');
+  trunkGrad.addColorStop(1, 'rgba(50, 35, 90, 0.98)');
+  ctx.fillStyle = trunkGrad;
+  roundRect(ctx, x, y - 18 * size, 22, 36 * size, 6);
+  ctx.fill();
+
+  const armBase = boundFraction > 0.5 ? '#c4a3ff' : '#9a7fc0';
+  const armDark = boundFraction > 0.5 ? '#8a64d8' : '#604584';
+  const armGrad = ctx.createLinearGradient(x - 22, 0, x + 2, 0);
+  armGrad.addColorStop(0, armBase);
+  armGrad.addColorStop(1, armDark);
+  ctx.fillStyle = armGrad;
+  ctx.beginPath();
+  ctx.moveTo(x + 2, y - 22 * size);
+  ctx.lineTo(x - 22, y - 16 * size);
+  ctx.lineTo(x - 22, y - 6 * size);
+  ctx.lineTo(x + 2, y - 4 * size);
+  ctx.closePath(); ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(x + 2, y + 22 * size);
+  ctx.lineTo(x - 22, y + 16 * size);
+  ctx.lineTo(x - 22, y + 6 * size);
+  ctx.lineTo(x + 2, y + 4 * size);
+  ctx.closePath(); ctx.fill();
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.18)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(x - 22, y - 16 * size); ctx.lineTo(x + 2, y - 22 * size);
+  ctx.moveTo(x - 22, y + 16 * size); ctx.lineTo(x + 2, y + 22 * size);
+  ctx.stroke();
+
+  if (boundFraction < 0.5) {
+    const sg = ctx.createRadialGradient(x - 12, y - 2, 0, x - 10, y, 10);
+    sg.addColorStop(0, 'rgba(60, 40, 90, 0.98)');
+    sg.addColorStop(1, 'rgba(20, 12, 40, 0.98)');
+    ctx.fillStyle = sg;
+    ctx.beginPath(); ctx.arc(x - 10, y, 9, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = 'rgba(176, 132, 255, 0.65)';
+    ctx.lineWidth = 1.5; ctx.stroke();
+    const idle = (Math.sin(animT / 700 + y * 0.03) + 1) * 0.5;
+    ctx.strokeStyle = `rgba(176, 132, 255, ${0.15 + idle * 0.15})`;
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.arc(x - 10, y, 11 + idle * 2, 0, Math.PI * 2); ctx.stroke();
+  } else {
+    const f = boundFraction;
+    const bindPulse = (Math.sin(animT / 220 + y * 0.04) + 1) * 0.5;
+    ctx.strokeStyle = `rgba(92, 201, 255, ${(0.3 + bindPulse * 0.3) * f})`;
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(x - 10, y, 14 + bindPulse * 4, 0, Math.PI * 2); ctx.stroke();
+    const gg = ctx.createRadialGradient(x - 10, y, 0, x - 10, y, 30);
+    gg.addColorStop(0, `rgba(92, 201, 255, ${f * 0.6})`);
+    gg.addColorStop(1, 'rgba(92, 201, 255, 0)');
+    ctx.fillStyle = gg;
+    ctx.beginPath(); ctx.arc(x - 10, y, 30, 0, Math.PI * 2); ctx.fill();
+    const cg = ctx.createRadialGradient(x - 12.5, y - 2.5, 0, x - 10, y, 8);
+    cg.addColorStop(0, 'rgba(255,255,255,0.95)');
+    cg.addColorStop(0.35, C_NT);
+    cg.addColorStop(1, '#1e7fb8');
+    ctx.fillStyle = cg;
+    ctx.beginPath(); ctx.arc(x - 10, y, 8, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,0.7)';
+    ctx.beginPath(); ctx.arc(x - 12, y - 2, 2.5, 0, Math.PI * 2); ctx.fill();
+  }
+  ctx.restore();
+}
+
+function drawTransporter(ctx, y, active, t, opts = {}) {
+  const x = PRE_MEM_X;
+  const reversed = opts.reversed || false;
+  const blocked = opts.blocked || false;
+  ctx.save();
+
+  const phase = (t || 0) / 380 + y * 0.04;
+  const breath = (Math.sin(phase) + 1) * 0.5;
+
+  if (active > 0.3) {
+    for (let i = 0; i < 3; i++) {
+      const off = ((phase * 0.5 + i * 0.33) % 1);
+      const r = 14 + off * 28;
+      const a = (1 - off) * 0.18 * active;
+      const glowColor = reversed ? `rgba(244, 114, 182, ${a})` : `rgba(94, 234, 212, ${a})`;
+      ctx.fillStyle = glowColor;
+      ctx.beginPath(); ctx.arc(x + 8, y, r, 0, Math.PI * 2); ctx.fill();
+    }
+  }
+
+  const trunkGrad = ctx.createLinearGradient(x - 22, 0, x, 0);
+  trunkGrad.addColorStop(0, 'rgba(12, 36, 38, 0.98)');
+  trunkGrad.addColorStop(1, 'rgba(28, 64, 64, 0.98)');
+  ctx.fillStyle = trunkGrad;
+  roundRect(ctx, x - 22, y - 18, 22, 36, 6);
+  ctx.fill();
+
+  const armGrad = ctx.createLinearGradient(x, 0, x + 22, 0);
+  if (reversed) {
+    armGrad.addColorStop(0, 'rgba(190, 80, 145, 1)');
+    armGrad.addColorStop(1, 'rgba(244, 114, 182, 1)');
+  } else if (blocked) {
+    armGrad.addColorStop(0, 'rgba(110, 110, 120, 0.85)');
+    armGrad.addColorStop(1, 'rgba(150, 150, 160, 0.85)');
+  } else if (active > 0.4) {
+    armGrad.addColorStop(0, 'rgba(56, 178, 172, 1)');
+    armGrad.addColorStop(1, 'rgba(94, 234, 212, 1)');
+  } else {
+    armGrad.addColorStop(0, 'rgba(56, 178, 172, 0.6)');
+    armGrad.addColorStop(1, 'rgba(94, 234, 212, 0.7)');
+  }
+  ctx.fillStyle = armGrad;
+  ctx.beginPath();
+  ctx.moveTo(x - 2, y - 22);
+  ctx.lineTo(x + 22, y - 16);
+  ctx.lineTo(x + 22, y - 6);
+  ctx.lineTo(x - 2, y - 4);
+  ctx.closePath(); ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(x - 2, y + 22);
+  ctx.lineTo(x + 22, y + 16);
+  ctx.lineTo(x + 22, y + 6);
+  ctx.lineTo(x - 2, y + 4);
+  ctx.closePath(); ctx.fill();
+
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.18)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(x - 2, y - 22); ctx.lineTo(x + 22, y - 16);
+  ctx.moveTo(x - 2, y + 22); ctx.lineTo(x + 22, y + 16);
+  ctx.stroke();
+
+  const poreGrad = ctx.createLinearGradient(x - 2, 0, x + 22, 0);
+  poreGrad.addColorStop(0, 'rgba(4, 14, 14, 1)');
+  poreGrad.addColorStop(1, 'rgba(20, 50, 50, 0.9)');
+  ctx.fillStyle = poreGrad;
+  ctx.beginPath();
+  ctx.moveTo(x - 2, y - 4);
+  ctx.lineTo(x + 22, y - 4);
+  ctx.lineTo(x + 22, y + 4);
+  ctx.lineTo(x - 2, y + 4);
+  ctx.closePath(); ctx.fill();
+
+  if (active > 0.3) {
+    const flow = (phase * 0.8) % 1;
+    for (let i = 0; i < 3; i++) {
+      const f = (flow + i * 0.33) % 1;
+      // reversed = flow outward (from terminal to cleft, left to right)
+      const sx = reversed ? (x - 2 + f * 26) : (x + 22 - f * 26);
+      const a = Math.sin(f * Math.PI) * 0.85 * active;
+      const flowColor = reversed ? `rgba(180, 220, 255, ${a})` : `rgba(180, 255, 240, ${a})`;
+      ctx.fillStyle = flowColor;
+      ctx.beginPath();
+      ctx.ellipse(sx, y, 3, 1.6, 0, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    // direction chevron
+    const chevColor = reversed ? `rgba(180, 220, 255, ${0.5 + breath * 0.4})` : `rgba(180, 255, 240, ${0.5 + breath * 0.4})`;
+    ctx.fillStyle = chevColor;
+    ctx.beginPath();
+    if (reversed) {
+      ctx.moveTo(x + 16, y - 5);
+      ctx.lineTo(x + 24, y);
+      ctx.lineTo(x + 16, y + 5);
+    } else {
+      ctx.moveTo(x + 4, y - 5);
+      ctx.lineTo(x - 4, y);
+      ctx.lineTo(x + 4, y + 5);
+    }
+    ctx.closePath(); ctx.fill();
+  }
+
+  if (blocked) {
+    ctx.strokeStyle = 'rgba(255, 100, 100, 0.95)';
+    ctx.lineWidth = 3;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(x + 4, y - 8); ctx.lineTo(x + 18, y + 8);
+    ctx.moveTo(x + 18, y - 8); ctx.lineTo(x + 4, y + 8);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
+function drawVesicle(ctx, x, y, r, fuseFraction, opts = {}) {
+  if (fuseFraction >= 1) return;
+  const ntCount = opts.ntCount === undefined ? 5 : opts.ntCount;
+  ctx.save();
+  ctx.globalAlpha = 1 - fuseFraction;
+  const g = ctx.createRadialGradient(x - r * 0.3, y - r * 0.3, 0, x, y, r);
+  g.addColorStop(0, 'rgba(255, 245, 220, 0.95)');
+  g.addColorStop(0.7, 'rgba(255, 220, 170, 0.7)');
+  g.addColorStop(1, 'rgba(212, 165, 84, 0.5)');
+  ctx.fillStyle = g;
+  ctx.beginPath();
+  ctx.arc(x, y, r * (1 + fuseFraction * 0.3), 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(255, 209, 102, 0.85)';
+  ctx.lineWidth = 1.5; ctx.stroke();
+  ctx.fillStyle = C_NT;
+  for (let i = 0; i < ntCount; i++) {
+    const a = i * 1.25;
+    const rr = r * 0.5;
+    ctx.beginPath();
+    ctx.arc(x + Math.cos(a) * rr, y + Math.sin(a) * rr, 2.5, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.restore();
+}
+
+// =====================================================
+//  Particles
+// =====================================================
+class NT {
+  constructor(x, y) {
+    this.x = x; this.y = y;
+    this.vx = (Math.random() - 0.5) * 0.6;
+    this.vy = (Math.random() - 0.5) * 0.6;
+    this.r = 7;
+    this.state = 'free';
+    this.bondT = 0;
+    this.target = null;
+    this.pathT = 0; this.pathSpeed = 0;
+    this.pathStart = null; this.pathEnd = null;
+    this.boundReceptor = null;
+    this.trail = [];
+    this.jitter = 0.18;
+    this.driftX = 0;
+  }
+  update(dt) {
+    this.trail.unshift({ x: this.x, y: this.y });
+    if (this.trail.length > 6) this.trail.pop();
+    if (this.state === 'transitTo') {
+      this.pathT += this.pathSpeed * dt;
+      if (this.pathT >= 1) {
+        this.pathT = 1;
+        this.x = this.pathEnd.x; this.y = this.pathEnd.y;
+        if (this.target === 'receptor' && this.boundReceptor) {
+          this.state = 'bound'; this.bondT = 0;
+        } else if (this.target === 'reuptake') {
+          this.state = 'recycled';
+        } else {
+          this.state = 'free';
+          this.vx = (Math.random() - 0.5) * 1.0;
+          this.vy = (Math.random() - 0.5) * 1.0;
+        }
+        return;
+      }
+      const tt = this.pathT;
+      const ease = tt * tt * (3 - 2 * tt);
+      this.x = lerp(this.pathStart.x, this.pathEnd.x, ease);
+      this.y = lerp(this.pathStart.y, this.pathEnd.y, ease);
+      return;
+    }
+    if (this.state === 'bound') { this.bondT += dt; return; }
+    if (this.state === 'recycled') return;
+    this.vx += this.driftX;
+    this.vx += (Math.random() - 0.5) * this.jitter;
+    this.vy += (Math.random() - 0.5) * this.jitter;
+    this.vx *= 0.97; this.vy *= 0.97;
+    const sp = Math.hypot(this.vx, this.vy);
+    if (sp > 1.0) { this.vx = this.vx / sp * 1.0; this.vy = this.vy / sp * 1.0; }
+    this.x += this.vx; this.y += this.vy;
+    if (this.y < ACT_TOP + 12) { this.y = ACT_TOP + 12; this.vy = Math.abs(this.vy); }
+    if (this.y > ACT_BOT - 12) { this.y = ACT_BOT - 12; this.vy = -Math.abs(this.vy); }
+    if (this.x < PRE_MEM_X + this.r + 4) { this.x = PRE_MEM_X + this.r + 4; this.vx = Math.abs(this.vx); }
+    if (this.x > POST_MEM_X - this.r - 4) { this.x = POST_MEM_X - this.r - 4; this.vx = -Math.abs(this.vx); }
+  }
+  setTransit(end, speed, target, receptor) {
+    this.state = 'transitTo';
+    this.pathStart = { x: this.x, y: this.y };
+    this.pathEnd = end;
+    this.pathT = 0; this.pathSpeed = speed;
+    this.target = target;
+    this.boundReceptor = receptor || null;
+  }
+  draw(ctx) {
+    if (this.state === 'recycled') return;
+    if (this.state === 'bound') return;
+    ctx.save();
+    for (let i = this.trail.length - 1; i > 0; i--) {
+      const p = this.trail[i];
+      const a = (1 - i / this.trail.length) * 0.18;
+      ctx.fillStyle = C_NT_GLOW + a + ')';
+      ctx.beginPath(); ctx.arc(p.x, p.y, this.r * 0.85, 0, Math.PI * 2); ctx.fill();
+    }
+    const g = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.r * 2.4);
+    g.addColorStop(0, C_NT_GLOW + '0.55)');
+    g.addColorStop(0.5, C_NT_GLOW + '0.2)');
+    g.addColorStop(1, C_NT_GLOW + '0)');
+    ctx.fillStyle = g;
+    ctx.beginPath(); ctx.arc(this.x, this.y, this.r * 2.4, 0, Math.PI * 2); ctx.fill();
+    const cg = ctx.createRadialGradient(this.x - this.r * 0.3, this.y - this.r * 0.3, 0, this.x, this.y, this.r);
+    cg.addColorStop(0, 'rgba(255,255,255,0.95)');
+    cg.addColorStop(0.3, C_NT);
+    cg.addColorStop(1, '#1e7fb8');
+    ctx.fillStyle = cg;
+    ctx.beginPath(); ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+    ctx.lineWidth = 1; ctx.stroke();
+    ctx.restore();
+  }
+}
+
+class Calcium {
+  constructor(x, y, region) {
+    this.x = x; this.y = y;
+    this.region = region;
+    this.vx = (Math.random() - 0.5) * 0.6;
+    this.vy = (Math.random() - 0.5) * 0.6;
+    this.r = 8;
+    this.state = 'free';
+    this.pathT = 0; this.pathSpeed = 0;
+    this.pathStart = null; this.pathEnd = null;
+    this.trail = [];
+  }
+  update(dt) {
+    this.trail.unshift({ x: this.x, y: this.y });
+    if (this.trail.length > 6) this.trail.pop();
+    if (this.state === 'transit') {
+      this.pathT += this.pathSpeed * dt;
+      if (this.pathT >= 1) {
+        this.pathT = 1; this.x = this.pathEnd.x; this.y = this.pathEnd.y;
+        this.state = 'free'; this.region = 'inside';
+        this.vx = (Math.random() - 0.5) * 1.4;
+        this.vy = (Math.random() - 0.5) * 1.4;
+        return;
+      }
+      const tt = this.pathT;
+      const ease = tt * tt * (3 - 2 * tt);
+      this.x = lerp(this.pathStart.x, this.pathEnd.x, ease);
+      this.y = lerp(this.pathStart.y, this.pathEnd.y, ease);
+      return;
+    }
+    this.vx += (Math.random() - 0.5) * 0.2;
+    this.vy += (Math.random() - 0.5) * 0.2;
+    this.vx *= 0.94; this.vy *= 0.94;
+    const sp = Math.hypot(this.vx, this.vy);
+    if (sp > 1.4) { this.vx = this.vx / sp * 1.4; this.vy = this.vy / sp * 1.4; }
+    this.x += this.vx; this.y += this.vy;
+    if (this.region === 'outside') {
+      if (this.y < ACT_TOP + 12) { this.y = ACT_TOP + 12; this.vy = Math.abs(this.vy); }
+      if (this.y > ACT_BOT - 12) { this.y = ACT_BOT - 12; this.vy = -Math.abs(this.vy); }
+      if (this.x < PRE_MEM_X + this.r + 4) { this.x = PRE_MEM_X + this.r + 4; this.vx = Math.abs(this.vx); }
+      if (this.x > POST_MEM_X - this.r - 4) { this.x = POST_MEM_X - this.r - 4; this.vx = -Math.abs(this.vx); }
+    } else {
+      if (this.y < ACT_TOP + 12) { this.y = ACT_TOP + 12; this.vy = Math.abs(this.vy); }
+      if (this.y > ACT_BOT - 12) { this.y = ACT_BOT - 12; this.vy = -Math.abs(this.vy); }
+      if (this.x < 320) { this.x = 320; this.vx = Math.abs(this.vx); }
+      if (this.x > PRE_MEM_X - this.r - 8) { this.x = PRE_MEM_X - this.r - 8; this.vx = -Math.abs(this.vx); }
+    }
+  }
+  setTransit(end, speed) {
+    this.state = 'transit';
+    this.pathStart = { x: this.x, y: this.y };
+    this.pathEnd = end;
+    this.pathT = 0; this.pathSpeed = speed;
+  }
+  draw(ctx) {
+    ctx.save();
+    for (let i = this.trail.length - 1; i > 0; i--) {
+      const p = this.trail[i];
+      const a = (1 - i / this.trail.length) * 0.18;
+      ctx.fillStyle = C_CA_GLOW + a + ')';
+      ctx.beginPath(); ctx.arc(p.x, p.y, this.r * 0.85, 0, Math.PI * 2); ctx.fill();
+    }
+    const g = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.r * 2.5);
+    g.addColorStop(0, C_CA_GLOW + '0.55)');
+    g.addColorStop(0.5, C_CA_GLOW + '0.2)');
+    g.addColorStop(1, C_CA_GLOW + '0)');
+    ctx.fillStyle = g;
+    ctx.beginPath(); ctx.arc(this.x, this.y, this.r * 2.5, 0, Math.PI * 2); ctx.fill();
+    const cg = ctx.createRadialGradient(this.x - this.r * 0.3, this.y - this.r * 0.3, 0, this.x, this.y, this.r);
+    cg.addColorStop(0, 'rgba(255,255,255,0.9)');
+    cg.addColorStop(0.3, C_CA);
+    cg.addColorStop(1, '#22a55a');
+    ctx.fillStyle = cg;
+    ctx.beginPath(); ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,0.95)';
+    ctx.font = '700 9px -apple-system, system-ui';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('Ca²⁺', this.x, this.y + 0.5);
+    ctx.restore();
+  }
+}
+
+class Vesicle {
+  constructor(x, y, opts = {}) {
+    this.x = x; this.y = y;
+    this.r = opts.r || 18;
+    this.ntCount = opts.ntCount === undefined ? 5 : opts.ntCount;
+    this.state = 'rest';
+    this.dockTarget = null;
+    this.dockT = 0;
+    this.fuseT = 0;
+  }
+  update(dt) {
+    if (this.state === 'docking') {
+      this.dockT += dt / 800;
+      if (this.dockT >= 1) {
+        this.dockT = 1;
+        this.x = this.dockTarget.x; this.y = this.dockTarget.y;
+        this.state = 'fused';
+      } else {
+        const t = this.dockT * this.dockT * (3 - 2 * this.dockT);
+        this.x = lerp(this.x0, this.dockTarget.x, t);
+        this.y = lerp(this.y0, this.dockTarget.y, t);
+      }
+    } else if (this.state === 'fused') {
+      this.fuseT += dt / 600;
+      if (this.fuseT > 1) this.fuseT = 1;
+    } else {
+      this.x += (Math.random() - 0.5) * 0.3;
+      this.y += (Math.random() - 0.5) * 0.3;
+    }
+  }
+  startDock(target) {
+    this.state = 'docking'; this.dockT = 0;
+    this.x0 = this.x; this.y0 = this.y;
+    this.dockTarget = target;
+  }
+  draw(ctx) {
+    if (this.state === 'fused' && this.fuseT >= 1) return;
+    const fade = this.state === 'fused' ? this.fuseT : 0;
+    drawVesicle(ctx, this.x, this.y, this.r, fade, { ntCount: this.ntCount });
+  }
+}
+
+class MDMA {
+  constructor(x, y) {
+    this.x = x; this.y = y;
+    this.r = 9;
+    this.vx = (Math.random() - 0.5) * 0.5;
+    this.vy = (Math.random() - 0.5) * 0.5;
+    this.state = 'free';
+    this.pathT = 0; this.pathSpeed = 0;
+    this.pathStart = null; this.pathEnd = null;
+    this.confine = null;
+  }
+  update(dt) {
+    if (this.state === 'transitTo') {
+      this.pathT += this.pathSpeed * dt;
+      if (this.pathT >= 1) {
+        this.pathT = 1;
+        this.x = this.pathEnd.x; this.y = this.pathEnd.y;
+        this.state = 'free';
+        this.vx = (Math.random() - 0.5) * 0.5;
+        this.vy = (Math.random() - 0.5) * 0.5;
+        return;
+      }
+      const tt = this.pathT;
+      const ease = tt * tt * (3 - 2 * tt);
+      this.x = lerp(this.pathStart.x, this.pathEnd.x, ease);
+      this.y = lerp(this.pathStart.y, this.pathEnd.y, ease);
+      return;
+    }
+    this.vx += (Math.random() - 0.5) * 0.15;
+    this.vy += (Math.random() - 0.5) * 0.15;
+    this.vx *= 0.95; this.vy *= 0.95;
+    this.x += this.vx; this.y += this.vy;
+
+    if (this.confine === 'terminal') {
+      // inside presynaptic bouton
+      if (this.y < ACT_TOP + 18) { this.y = ACT_TOP + 18; this.vy = Math.abs(this.vy); }
+      if (this.y > ACT_BOT - 18) { this.y = ACT_BOT - 18; this.vy = -Math.abs(this.vy); }
+      if (this.x < 290) { this.x = 290; this.vx = Math.abs(this.vx); }
+      if (this.x > PRE_MEM_X - 22) { this.x = PRE_MEM_X - 22; this.vx = -Math.abs(this.vx); }
+    } else if (this.confine === 'cleft') {
+      if (this.y < ACT_TOP + 12) { this.y = ACT_TOP + 12; this.vy = Math.abs(this.vy); }
+      if (this.y > ACT_BOT - 12) { this.y = ACT_BOT - 12; this.vy = -Math.abs(this.vy); }
+      if (this.x < PRE_MEM_X + this.r) { this.x = PRE_MEM_X + this.r; this.vx = Math.abs(this.vx); }
+      if (this.x > POST_MEM_X - this.r) { this.x = POST_MEM_X - this.r; this.vx = -Math.abs(this.vx); }
+    }
+  }
+  setTransit(end, speed) {
+    this.state = 'transitTo';
+    this.pathStart = { x: this.x, y: this.y };
+    this.pathEnd = end;
+    this.pathT = 0; this.pathSpeed = speed;
+  }
+  draw(ctx) {
+    ctx.save();
+    const x = this.x, y = this.y, r = this.r;
+    const g = ctx.createRadialGradient(x - r * 0.3, y - r * 0.3, 0, x, y, r * 2.4);
+    g.addColorStop(0, C_MDMA_GLOW + '0.55)');
+    g.addColorStop(0.5, C_MDMA_GLOW + '0.2)');
+    g.addColorStop(1, C_MDMA_GLOW + '0)');
+    ctx.fillStyle = g;
+    ctx.beginPath(); ctx.arc(x, y, r * 2.4, 0, Math.PI * 2); ctx.fill();
+    const cg = ctx.createRadialGradient(x - r * 0.3, y - r * 0.3, 0, x, y, r);
+    cg.addColorStop(0, 'rgba(255,255,255,0.95)');
+    cg.addColorStop(0.35, C_MDMA);
+    cg.addColorStop(1, '#a02868');
+    ctx.fillStyle = cg;
+    ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.4)';
+    ctx.lineWidth = 1; ctx.stroke();
+    ctx.fillStyle = 'rgba(255,255,255,0.95)';
+    ctx.font = '700 8px -apple-system, system-ui';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('MDMA', x, y + 0.5);
+    ctx.restore();
+  }
+}
+
+// =====================================================
+//  Label helper
+// =====================================================
+function drawLabel(ctx, text, lx, ly, tx, ty, color = '#ffd166', fontSize = 14) {
+  function hexToRgb(h) {
+    const c = h.replace('#', '');
+    return [parseInt(c.substr(0,2),16), parseInt(c.substr(2,2),16), parseInt(c.substr(4,2),16)];
+  }
+  const [r, g, b] = hexToRgb(color);
+  ctx.save();
+
+  const leaderGrad = ctx.createLinearGradient(lx, ly, tx, ty);
+  leaderGrad.addColorStop(0, `rgba(${r},${g},${b},0.85)`);
+  leaderGrad.addColorStop(1, `rgba(${r},${g},${b},0.25)`);
+  ctx.strokeStyle = leaderGrad;
+  ctx.lineWidth = 1.5;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(lx, ly); ctx.lineTo(tx, ty); ctx.stroke();
+
+  const pulse = (Math.sin(animT / 400) + 1) * 0.5;
+  ctx.strokeStyle = `rgba(${r},${g},${b},${0.3 + pulse * 0.3})`;
+  ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.arc(tx, ty, 8 + pulse * 3, 0, Math.PI * 2); ctx.stroke();
+  const dotGlow = ctx.createRadialGradient(tx, ty, 0, tx, ty, 14);
+  dotGlow.addColorStop(0, `rgba(${r},${g},${b},0.55)`);
+  dotGlow.addColorStop(1, `rgba(${r},${g},${b},0)`);
+  ctx.fillStyle = dotGlow;
+  ctx.beginPath(); ctx.arc(tx, ty, 14, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = color;
+  ctx.beginPath(); ctx.arc(tx, ty, 3.5, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = 'rgba(255,255,255,0.7)';
+  ctx.beginPath(); ctx.arc(tx - 0.8, ty - 0.8, 1.4, 0, Math.PI * 2); ctx.fill();
+
+  ctx.font = `600 ${fontSize}px -apple-system, system-ui`;
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  const m = ctx.measureText(text);
+  const padX = 14, padY = 8;
+  const bw = m.width + padX * 2;
+  const bh = fontSize + padY * 2;
+  const bx = lx - bw / 2, by = ly - bh / 2;
+
+  ctx.shadowBlur = 18;
+  ctx.shadowColor = `rgba(${r},${g},${b},0.35)`;
+  ctx.shadowOffsetY = 3;
+
+  const bgGrad = ctx.createLinearGradient(0, by, 0, by + bh);
+  bgGrad.addColorStop(0, 'rgba(28, 32, 48, 0.92)');
+  bgGrad.addColorStop(1, 'rgba(14, 18, 30, 0.92)');
+  ctx.fillStyle = bgGrad;
+  if (ctx.roundRect) { ctx.beginPath(); ctx.roundRect(bx, by, bw, bh, bh / 2); ctx.fill(); }
+  else { ctx.fillRect(bx, by, bw, bh); }
+
+  ctx.shadowBlur = 0;
+  ctx.shadowOffsetY = 0;
+
+  ctx.strokeStyle = `rgba(${r},${g},${b},0.55)`;
+  ctx.lineWidth = 1;
+  if (ctx.roundRect) { ctx.beginPath(); ctx.roundRect(bx, by, bw, bh, bh / 2); ctx.stroke(); }
+  ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  if (ctx.roundRect) ctx.roundRect(bx + 1, by + 1, bw - 2, bh / 2, bh / 2 - 1);
+  ctx.stroke();
+
+  ctx.fillStyle = color;
+  ctx.fillText(text, lx, ly + 0.5);
+
+  ctx.restore();
+}
+
+// Lightning bolt on postsynaptic side (signaling strength)
+function drawSignalBolt(ctx, sx, sy, ex, ey, strength) {
+  if (strength < 0.05) return;
+  const segs = 14;
+  const points = [];
+  for (let i = 0; i <= segs; i++) {
+    const f = i / segs;
+    const x = lerp(sx, ex, f);
+    const y = lerp(sy, ey, f) + (Math.random() - 0.5) * 8 * strength;
+    points.push({ x, y });
+  }
+  ctx.save();
+  ctx.strokeStyle = `rgba(255, 209, 102, ${0.6 * strength})`;
+  ctx.lineWidth = 6 * strength;
+  ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  ctx.shadowBlur = 16;
+  ctx.shadowColor = `rgba(255, 209, 102, ${0.8 * strength})`;
+  ctx.beginPath();
+  points.forEach((p, i) => { if (i === 0) ctx.moveTo(p.x, p.y); else ctx.lineTo(p.x, p.y); });
+  ctx.stroke();
+  ctx.shadowBlur = 8;
+  ctx.shadowColor = 'rgba(255,255,255,0.9)';
+  ctx.strokeStyle = `rgba(255,255,255,${0.9 * strength})`;
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  points.forEach((p, i) => { if (i === 0) ctx.moveTo(p.x, p.y); else ctx.lineTo(p.x, p.y); });
+  ctx.stroke();
+  ctx.restore();
+}
+
+// Weak yellow squiggle for withdrawal
+function drawWeakSignal(ctx, sx, sy, ex, ey, t) {
+  ctx.save();
+  ctx.strokeStyle = 'rgba(255, 209, 102, 0.4)';
+  ctx.lineWidth = 2;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  const segs = 30;
+  for (let i = 0; i <= segs; i++) {
+    const f = i / segs;
+    const x = lerp(sx, ex, f);
+    const y = lerp(sy, ey, f) + Math.sin(f * Math.PI * 4 + t / 400) * 8;
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+  ctx.restore();
+}
+
+// =====================================================
+//  Common positions
+// =====================================================
+const CA_CHANNEL_YS = [240, 325, 410];
+const TRANS_YS = [275, 375];
+const RECEPTOR_YS = [240, 285, 325, 365, 410];
+
+const VESICLE_POSITIONS = [
+  { x: 380, y: 250 }, { x: 460, y: 220 }, { x: 540, y: 270 },
+  { x: 410, y: 320 }, { x: 500, y: 350 }, { x: 600, y: 310 },
+  { x: 380, y: 400 }, { x: 470, y: 420 }, { x: 560, y: 390 },
+  { x: 640, y: 270 }, { x: 640, y: 380 }
+];
+
+let currentSceneIdx = 0;
+let sceneFadeT = 0;
+let sceneLocal = {};
+function clearField() { sceneLocal = {}; }
+
+// =====================================================
+//  SCENE 1: Meet the Synapse (labeled overview)
+// =====================================================
+const sceneIntro = {
+  phase: 'Step 1: Meet the Synapse',
+  phaseColor: '#5eead4',
+  notes: "Neurons communicate by passing chemical messengers across a tiny gap called the <strong>synapse</strong>. On the left, the <strong>presynaptic terminal</strong> stores <strong>serotonin (5-HT)</strong> inside little sacs called <strong>vesicles</strong>. On the right, the <strong>postsynaptic neuron</strong> has <strong>receptors</strong> waiting to catch serotonin. The membrane also holds <strong>Ca²⁺ channels</strong> and <strong>SERT</strong> (the serotonin transporter that cleans up after the signal).",
+  notebook: "Label every part you see: <strong>presynaptic terminal, synapse (the gap), postsynaptic neuron, vesicle, serotonin (5-HT), Ca²⁺ channel, SERT transporter, serotonin receptor</strong>.",
+  setup() {
+    clearField();
+    const ves = VESICLE_POSITIONS.map(p => new Vesicle(p.x, p.y));
+    sceneLocal = { vesicles: ves, zoomT: 0 };
+  },
+  update(dt) {
+    sceneLocal.zoomT = Math.min(1, sceneLocal.zoomT + dt / 700);
+    sceneLocal.vesicles.forEach(v => v.update(dt));
+  },
+  draw(ctx, t) {
+    ctx.fillStyle = '#0a0a0a';
+    ctx.fillRect(0, 0, W, H);
+    ctx.save();
+    ctx.globalAlpha = sceneLocal.zoomT;
+    drawPresynapticTerminal(ctx);
+    drawPostsynapticDendrite(ctx);
+
+    const cleftG = ctx.createLinearGradient(PRE_MEM_X, 0, POST_MEM_X, 0);
+    cleftG.addColorStop(0, 'rgba(94, 234, 212, 0.04)');
+    cleftG.addColorStop(0.5, 'rgba(94, 234, 212, 0.10)');
+    cleftG.addColorStop(1, 'rgba(94, 234, 212, 0.04)');
+    ctx.fillStyle = cleftG;
+    ctx.fillRect(PRE_MEM_X, ACT_TOP - 20, POST_MEM_X - PRE_MEM_X, ACT_BOT - ACT_TOP + 40);
+
+    sceneLocal.vesicles.forEach(v => v.draw(ctx));
+    CA_CHANNEL_YS.forEach(y => drawCalciumChannel(ctx, y, 0));
+    TRANS_YS.forEach(y => drawTransporter(ctx, y, 0, t));
+    RECEPTOR_YS.forEach(y => drawReceptor(ctx, y, 0));
+
+    ctx.save();
+    ctx.fillStyle = '#5eead4';
+    ctx.font = '900 26px -apple-system, system-ui';
+    ctx.textAlign = 'center';
+    ctx.fillText('THE SYNAPSE', CLEFT_MID, 60);
+    ctx.font = '500 13px -apple-system, system-ui';
+    ctx.fillStyle = 'rgba(94, 234, 212, 0.85)';
+    ctx.fillText('the gap between two neurons', CLEFT_MID, 82);
+    ctx.strokeStyle = 'rgba(94, 234, 212, 0.7)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(CLEFT_MID, 95); ctx.lineTo(CLEFT_MID, 175); ctx.stroke();
+    ctx.fillStyle = 'rgba(94, 234, 212, 0.7)';
+    ctx.beginPath();
+    ctx.moveTo(CLEFT_MID, 188);
+    ctx.lineTo(CLEFT_MID - 7, 175); ctx.lineTo(CLEFT_MID + 7, 175);
+    ctx.closePath(); ctx.fill();
+    ctx.restore();
+
+    drawLabel(ctx, 'presynaptic terminal', 290, 110, 410, 200);
+    drawLabel(ctx, 'vesicle (holds serotonin)', 290, 540, 380, 400, '#ffd166');
+    drawLabel(ctx, 'serotonin (5-HT)', 470, 605, 470, 420, C_NT);
+    drawLabel(ctx, 'Ca²⁺ channel', 620, 110, 720, 240, C_CA);
+    drawLabel(ctx, 'SERT transporter', 620, 540, 720, 375, C_TRANS);
+    drawLabel(ctx, 'postsynaptic neuron', 1310, 110, 1190, 200, '#7da3d6');
+    drawLabel(ctx, 'serotonin receptor', 1100, 605, 880, 410, C_RECEPTOR);
+
+    ctx.restore();
+  }
+};
+
+// =====================================================
+//  SCENE 2: Normal Release · Ca²⁺ + Vesicle Fusion
+// =====================================================
+const sceneNormalRelease = {
+  phase: 'Step 2: Normal Release',
+  phaseColor: '#4ade80',
+  notes: "When a nerve impulse arrives, <strong>Ca²⁺ channels open</strong> and calcium rushes into the terminal. That calcium signal tells the <strong>vesicles</strong> to <strong>fuse with the membrane</strong> and release their <strong>serotonin</strong> into the synapse.",
+  notebook: "Draw Ca²⁺ flowing IN through open channels. Then draw vesicles fusing and releasing <strong>serotonin (blue dots)</strong> into the gap. Label this step: <strong>Ca²⁺ → vesicle release</strong>.",
+  setup() {
+    clearField();
+    const ves = VESICLE_POSITIONS.map((p, i) => {
+      const v = new Vesicle(p.x, p.y);
+      v.willDock = [1, 2, 3, 4, 6].includes(i);
+      v.dockY = [240, 285, 325, 365, 410][[1,2,3,4,6].indexOf(i)] || p.y;
+      v.delay = [0, 150, 300, 450, 600][[1,2,3,4,6].indexOf(i)] || 0;
+      return v;
+    });
+    const ca = [];
+    for (let i = 0; i < 12; i++) {
+      const cy = ACT_TOP + 20 + Math.random() * (ACT_BOT - ACT_TOP - 40);
+      const cx = PRE_MEM_X + 20 + Math.random() * (POST_MEM_X - PRE_MEM_X - 40);
+      ca.push(new Calcium(cx, cy, 'outside'));
+    }
+    sceneLocal = {
+      vesicles: ves, calciums: ca, nts: [],
+      channels: CA_CHANNEL_YS.map(y => ({ y, openness: 0, target: 0 })),
+      cycleT: 0
+    };
+  },
+  update(dt) {
+    sceneLocal.cycleT += dt;
+    const cycle = 5000;
+    const phase = (sceneLocal.cycleT % cycle) / cycle;
+    if (phase < 0.04 && (sceneLocal.lastPhase || 1) > 0.9) {
+      // restart cycle
+      sceneLocal.channels.forEach(c => { c.openness = 0; c.target = 0; });
+      sceneLocal.vesicles.forEach(v => {
+        v.state = 'rest';
+        v.dockT = 0; v.fuseT = 0;
+        const original = VESICLE_POSITIONS.find(p => Math.abs(p.x - (v.x0 || v.x)) < 5);
+      });
+      // reset vesicles back to original positions
+      sceneLocal.vesicles = VESICLE_POSITIONS.map((p, i) => {
+        const v = new Vesicle(p.x, p.y);
+        v.willDock = [1, 2, 3, 4, 6].includes(i);
+        v.dockY = [240, 285, 325, 365, 410][[1,2,3,4,6].indexOf(i)] || p.y;
+        v.delay = [0, 150, 300, 450, 600][[1,2,3,4,6].indexOf(i)] || 0;
+        return v;
+      });
+      sceneLocal.calciums = [];
+      for (let i = 0; i < 12; i++) {
+        const cy = ACT_TOP + 20 + Math.random() * (ACT_BOT - ACT_TOP - 40);
+        const cx = PRE_MEM_X + 20 + Math.random() * (POST_MEM_X - PRE_MEM_X - 40);
+        sceneLocal.calciums.push(new Calcium(cx, cy, 'outside'));
+      }
+      sceneLocal.nts = [];
+    }
+    sceneLocal.lastPhase = phase;
+
+    // Open channels at phase 0.10
+    sceneLocal.channels.forEach((c, i) => {
+      if (phase > 0.10 + i * 0.03) c.target = 1;
+      else c.target = 0;
+      c.openness = lerp(c.openness, c.target, 0.08);
+    });
+
+    // Calcium influx
+    sceneLocal.calciums.forEach(c => {
+      if (c.state === 'free' && c.region === 'outside') {
+        for (const ch of sceneLocal.channels) {
+          if (ch.openness > 0.6 && Math.abs(c.y - ch.y) < 50 && Math.abs(c.x - PRE_MEM_X) < 80) {
+            c.setTransit({ x: PRE_MEM_X - 60, y: ch.y + (Math.random() - 0.5) * 20 }, 1.6 / 1000);
+            break;
+          }
+        }
+      }
+      c.update(dt);
+    });
+
+    // Vesicles dock at phase 0.30
+    if (phase > 0.30) {
+      sceneLocal.vesicles.forEach(v => {
+        if (v.willDock && v.state === 'rest' && phase * cycle > 0.30 * cycle + v.delay) {
+          v.startDock({ x: PRE_MEM_X - 10, y: v.dockY });
+        }
+      });
+    }
+
+    // Release NTs when fused
+    sceneLocal.vesicles.forEach(v => {
+      if (v.state === 'fused' && !v.released && v.fuseT > 0.3) {
+        v.released = true;
+        for (let i = 0; i < 4; i++) {
+          const n = new NT(PRE_MEM_X + 10, v.dockY + (Math.random() - 0.5) * 20);
+          n.vx = 0.5 + Math.random() * 0.7;
+          n.vy = (Math.random() - 0.5) * 0.6;
+          sceneLocal.nts.push(n);
+        }
+      }
+    });
+
+    sceneLocal.vesicles.forEach(v => v.update(dt));
+    sceneLocal.nts.forEach(n => n.update(dt));
+  },
+  draw(ctx, t) {
+    ctx.fillStyle = '#0a0a0a';
+    ctx.fillRect(0, 0, W, H);
+    drawPresynapticTerminal(ctx);
+    drawPostsynapticDendrite(ctx);
+
+    sceneLocal.vesicles.forEach(v => v.draw(ctx));
+    sceneLocal.channels.forEach(c => drawCalciumChannel(ctx, c.y, c.openness));
+    TRANS_YS.forEach(y => drawTransporter(ctx, y, 0, t));
+    RECEPTOR_YS.forEach(y => drawReceptor(ctx, y, 0));
+    sceneLocal.calciums.forEach(c => c.draw(ctx));
+    sceneLocal.nts.forEach(n => n.draw(ctx));
+
+    ctx.save();
+    ctx.fillStyle = C_CA;
+    ctx.font = '700 16px -apple-system, system-ui';
+    ctx.textAlign = 'center';
+    const phase = (sceneLocal.cycleT % 5000) / 5000;
+    if (phase < 0.30) {
+      ctx.fillText('Ca²⁺ rushes IN through open channels', 540, 50);
+    } else {
+      ctx.fillStyle = C_NT;
+      ctx.fillText('vesicles release serotonin into the synapse', 540, 50);
+    }
+    ctx.restore();
+  }
+};
+
+// =====================================================
+//  SCENE 3: Bind, Reuptake, Recycle (the normal cycle)
+// =====================================================
+const sceneNormalCycle = {
+  phase: 'Step 3: Bind · Reuptake · Recycle',
+  phaseColor: '#5cc9ff',
+  notes: "Serotonin <strong>binds</strong> to receptors on the postsynaptic neuron and passes the signal along. Then <strong>SERT</strong> (the serotonin transporter) <strong>pulls leftover serotonin BACK</strong> into the presynaptic terminal, where it is <strong>recycled into vesicles</strong> to be used again. Clean signal, then quick cleanup.",
+  notebook: "Sketch serotonin <strong>binding</strong> to receptors (postsynaptic). Then draw SERT <strong>pulling leftover serotonin back IN</strong>. Add an arrow into a vesicle and label it <strong>recycled</strong>.",
+  setup() {
+    clearField();
+    const nts = [];
+    for (let i = 0; i < 14; i++) {
+      const n = new NT(PRE_MEM_X + 20 + Math.random() * 120, ACT_TOP + 20 + Math.random() * (ACT_BOT - ACT_TOP - 40));
+      nts.push(n);
+    }
+    sceneLocal = {
+      nts,
+      receptors: RECEPTOR_YS.map(y => ({ y, bound: 0, target: 0, releaseT: 0 })),
+      cycleT: 0
+    };
+  },
+  update(dt) {
+    sceneLocal.cycleT += dt;
+    const phase = (sceneLocal.cycleT % 6000) / 6000;
+
+    // Bind phase
+    sceneLocal.receptors.forEach((r, i) => {
+      if (phase < 0.40) {
+        if (r.bound < 0.5 && Math.random() < 0.012) {
+          // find a free NT
+          const free = sceneLocal.nts.find(n => n.state === 'free' && Math.abs(n.y - r.y) < 35);
+          if (free) {
+            free.setTransit({ x: POST_MEM_X - 10, y: r.y }, 1.6 / 1000, 'receptor', r);
+            r.target = 1;
+          }
+        }
+        r.bound = lerp(r.bound, r.target, 0.05);
+      } else if (phase < 0.60) {
+        // hold
+      } else if (phase < 0.85) {
+        // release back to cleft
+        r.target = 0;
+        if (r.bound > 0.5) {
+          r.releaseT += dt;
+          if (r.releaseT > 200 + i * 60) {
+            r.bound = 0; r.releaseT = 0;
+            // spawn an NT back into cleft heading to transporter
+            const newN = new NT(POST_MEM_X - 15, r.y);
+            newN.state = 'free';
+            newN.vx = -0.6;
+            sceneLocal.nts.push(newN);
+            const oldBound = sceneLocal.nts.find(n => n.state === 'bound' && n.boundReceptor === r);
+            if (oldBound) oldBound.state = 'recycled';
+          }
+        }
+      } else {
+        r.bound = lerp(r.bound, 0, 0.1);
+        r.target = 0;
+      }
+    });
+
+    // Reuptake · free NTs in cleft move toward transporters
+    if (phase > 0.55) {
+      sceneLocal.nts.forEach(n => {
+        if (n.state !== 'free') return;
+        for (const ty of TRANS_YS) {
+          if (Math.abs(n.y - ty) < 45 && n.x < PRE_MEM_X + 90 && Math.random() < 0.025) {
+            n.setTransit({ x: PRE_MEM_X - 30, y: ty }, 1.4 / 1000, 'reuptake');
+            break;
+          }
+        }
+      });
+    }
+
+    sceneLocal.nts.forEach(n => n.update(dt));
+
+    if (phase < 0.05 && (sceneLocal.lastPhase || 1) > 0.9) {
+      sceneLocal.nts = [];
+      for (let i = 0; i < 14; i++) {
+        sceneLocal.nts.push(new NT(PRE_MEM_X + 20 + Math.random() * 120, ACT_TOP + 20 + Math.random() * (ACT_BOT - ACT_TOP - 40)));
+      }
+      sceneLocal.receptors.forEach(r => { r.bound = 0; r.target = 0; r.releaseT = 0; });
+    }
+    sceneLocal.lastPhase = phase;
+  },
+  draw(ctx, t) {
+    ctx.fillStyle = '#0a0a0a';
+    ctx.fillRect(0, 0, W, H);
+    drawPresynapticTerminal(ctx);
+    drawPostsynapticDendrite(ctx);
+
+    VESICLE_POSITIONS.forEach(p => drawVesicle(ctx, p.x, p.y, 18, 0));
+    CA_CHANNEL_YS.forEach(y => drawCalciumChannel(ctx, y, 0));
+    const phase = (sceneLocal.cycleT % 6000) / 6000;
+    const transActive = phase > 0.55 ? 1 : 0.3;
+    TRANS_YS.forEach(y => drawTransporter(ctx, y, transActive, t));
+    sceneLocal.receptors.forEach(r => drawReceptor(ctx, r.y, r.bound));
+    sceneLocal.nts.forEach(n => n.draw(ctx));
+
+    ctx.save();
+    ctx.font = '700 16px -apple-system, system-ui';
+    ctx.textAlign = 'center';
+    if (phase < 0.40) {
+      ctx.fillStyle = C_RECEPTOR;
+      ctx.fillText('serotonin BINDS to receptors → signal passes', 540, 50);
+    } else if (phase < 0.55) {
+      ctx.fillStyle = '#ffd166';
+      ctx.fillText('signal received', 540, 50);
+    } else {
+      ctx.fillStyle = C_TRANS;
+      ctx.fillText('SERT pulls leftover serotonin BACK → recycled into vesicles', 540, 50);
+    }
+    ctx.restore();
+  }
+};
+
+// =====================================================
+//  SCENE 4: MDMA Enters the Terminal
+// =====================================================
+const sceneMDMAEnters = {
+  phase: 'Step 4: MDMA Enters the Terminal',
+  phaseColor: '#f472b6',
+  notes: "Now the drug shows up. <strong>MDMA</strong> (3,4-methylenedioxymethamphetamine) travels through the bloodstream into the brain and crosses into the <strong>presynaptic terminal</strong>. Once inside, it is about to make the synapse behave very differently.",
+  notebook: "Draw pink <strong>MDMA molecules</strong> moving from outside the terminal INTO the presynaptic side. Write the full chemical name: <strong>3,4-methylenedioxymethamphetamine</strong>.",
+  setup() {
+    clearField();
+    const mdmas = [];
+    for (let i = 0; i < 12; i++) {
+      const m = new MDMA(-30 - Math.random() * 200, MID + (Math.random() - 0.5) * 80);
+      const tx = 300 + Math.random() * (PRE_MEM_X - 340);
+      const ty = ACT_TOP + 30 + Math.random() * (ACT_BOT - ACT_TOP - 60);
+      m.setTransit({ x: tx, y: ty }, 0.5 / 1000 + Math.random() * 0.4 / 1000);
+      m.confine = 'terminal';
+      m.delay = i * 200;
+      mdmas.push(m);
+    }
+    sceneLocal = { mdmas, vesicles: VESICLE_POSITIONS.map(p => new Vesicle(p.x, p.y)), entered: 0, cycleT: 0 };
+  },
+  update(dt) {
+    sceneLocal.cycleT += dt;
+    sceneLocal.mdmas.forEach(m => {
+      if (m.delay > 0) { m.delay -= dt; return; }
+      m.update(dt);
+    });
+    sceneLocal.vesicles.forEach(v => v.update(dt));
+  },
+  draw(ctx, t) {
+    ctx.fillStyle = '#0a0a0a';
+    ctx.fillRect(0, 0, W, H);
+    drawPresynapticTerminal(ctx);
+    drawPostsynapticDendrite(ctx);
+
+    sceneLocal.vesicles.forEach(v => v.draw(ctx));
+    CA_CHANNEL_YS.forEach(y => drawCalciumChannel(ctx, y, 0));
+    TRANS_YS.forEach(y => drawTransporter(ctx, y, 0, t));
+    RECEPTOR_YS.forEach(y => drawReceptor(ctx, y, 0));
+
+    sceneLocal.mdmas.forEach(m => { if (m.delay <= 0) m.draw(ctx); });
+
+    ctx.save();
+    ctx.fillStyle = C_MDMA;
+    ctx.font = '900 24px -apple-system, system-ui';
+    ctx.textAlign = 'center';
+    ctx.fillText('MDMA enters the terminal →', 540, 60);
+    ctx.font = '500 13px -apple-system, system-ui';
+    ctx.fillStyle = 'rgba(244, 114, 182, 0.85)';
+    ctx.fillText('3,4-methylenedioxymethamphetamine', 540, 84);
+    ctx.restore();
+
+    drawLabel(ctx, 'MDMA', 200, 140, 100, MID - 10, C_MDMA);
+  }
+};
+
+// =====================================================
+//  SCENE 5: Massive Release + Reversed SERT
+// =====================================================
+const sceneMDMAFlood = {
+  phase: 'Step 5: MDMA Floods the Synapse',
+  phaseColor: '#f472b6',
+  notes: "MDMA causes <strong>vesicles to dump huge amounts of serotonin</strong> into the terminal. Then it <strong>hijacks SERT and reverses it</strong>. Instead of pulling serotonin back IN, SERT now pumps serotonin OUT into the synapse. The synapse <strong>floods</strong> with serotonin.",
+  notebook: "Draw vesicles emptying inside the terminal. Then draw SERT arrows pointing the <strong>WRONG WAY</strong> (out into the cleft instead of in). Write: <strong>SERT reversed → serotonin flood</strong>.",
+  setup() {
+    clearField();
+    const mdmas = [];
+    for (let i = 0; i < 14; i++) {
+      const x = 290 + Math.random() * (PRE_MEM_X - 320);
+      const y = ACT_TOP + 30 + Math.random() * (ACT_BOT - ACT_TOP - 60);
+      const m = new MDMA(x, y);
+      m.confine = 'terminal';
+      mdmas.push(m);
+    }
+    const ves = VESICLE_POSITIONS.map((p, i) => {
+      const v = new Vesicle(p.x, p.y);
+      const dockSlots = [240, 285, 325, 365, 410, 240, 410, 325, 285, 365, 240];
+      v.willDock = true;
+      v.dockY = dockSlots[i];
+      v.delay = i * 120;
+      return v;
+    });
+    sceneLocal = { mdmas, vesicles: ves, nts: [], cycleT: 0, sertReversed: 0 };
+  },
+  update(dt) {
+    sceneLocal.cycleT += dt;
+    sceneLocal.sertReversed = Math.min(1, sceneLocal.sertReversed + dt / 1500);
+    sceneLocal.mdmas.forEach(m => m.update(dt));
+
+    sceneLocal.vesicles.forEach((v, i) => {
+      if (v.state === 'rest' && sceneLocal.cycleT > v.delay) {
+        v.startDock({ x: PRE_MEM_X - 10, y: v.dockY });
+      }
+      v.update(dt);
+      if (v.state === 'fused' && !v.released && v.fuseT > 0.3) {
+        v.released = true;
+        for (let j = 0; j < 7; j++) {
+          const n = new NT(PRE_MEM_X + 10, v.dockY + (Math.random() - 0.5) * 24);
+          n.vx = 0.6 + Math.random() * 1.0;
+          n.vy = (Math.random() - 0.5) * 0.8;
+          sceneLocal.nts.push(n);
+        }
+      }
+    });
+
+    // Reversed SERT also pumps serotonin OUT
+    if (sceneLocal.sertReversed > 0.5 && Math.random() < 0.08) {
+      const ty = TRANS_YS[Math.floor(Math.random() * TRANS_YS.length)];
+      const n = new NT(PRE_MEM_X + 25, ty + (Math.random() - 0.5) * 10);
+      n.vx = 0.7 + Math.random() * 0.5;
+      n.vy = (Math.random() - 0.5) * 0.5;
+      sceneLocal.nts.push(n);
+    }
+
+    sceneLocal.nts.forEach(n => n.update(dt));
+
+    // Loop softly · don't fully reset; let cleft stay flooded
+    if (sceneLocal.cycleT > 10000) {
+      // continue cycling vesicles
+      sceneLocal.vesicles.forEach(v => {
+        if (v.state === 'fused' && v.fuseT >= 1 && Math.random() < 0.01) {
+          const orig = VESICLE_POSITIONS[Math.floor(Math.random() * VESICLE_POSITIONS.length)];
+          v.x = orig.x; v.y = orig.y; v.fuseT = 0; v.dockT = 0;
+          v.state = 'rest'; v.released = false;
+          v.delay = sceneLocal.cycleT + 500;
+        }
+      });
+      // limit cleft NTs
+      while (sceneLocal.nts.length > 70) sceneLocal.nts.shift();
+    }
+  },
+  draw(ctx, t) {
+    ctx.fillStyle = '#0a0a0a';
+    ctx.fillRect(0, 0, W, H);
+    drawPresynapticTerminal(ctx);
+    drawPostsynapticDendrite(ctx);
+
+    sceneLocal.vesicles.forEach(v => v.draw(ctx));
+    CA_CHANNEL_YS.forEach(y => drawCalciumChannel(ctx, y, 0));
+    TRANS_YS.forEach(y => drawTransporter(ctx, y, sceneLocal.sertReversed, t, { reversed: sceneLocal.sertReversed > 0.5 }));
+    RECEPTOR_YS.forEach(y => drawReceptor(ctx, y, 0));
+    sceneLocal.mdmas.forEach(m => m.draw(ctx));
+    sceneLocal.nts.forEach(n => n.draw(ctx));
+
+    ctx.save();
+    ctx.fillStyle = C_MDMA;
+    ctx.font = '700 16px -apple-system, system-ui';
+    ctx.textAlign = 'center';
+    if (sceneLocal.sertReversed < 0.5) {
+      ctx.fillText('vesicles dump serotonin →', 460, 50);
+    } else {
+      ctx.fillText('vesicles dump serotonin →', 380, 50);
+      ctx.fillStyle = C_MDMA;
+      ctx.fillText('+ SERT REVERSED (pumps OUT)', 720, 50);
+    }
+    ctx.restore();
+
+    if (sceneLocal.sertReversed > 0.5) {
+      drawLabel(ctx, 'SERT reversed: flowing OUT', 1100, 540, 740, 375, C_MDMA);
+    }
+  }
+};
+
+// =====================================================
+//  SCENE 6: Effects · Receptors Light Up
+// =====================================================
+const sceneEffects = {
+  phase: 'Step 6: The Effects',
+  phaseColor: '#ffd166',
+  notes: "With serotonin flooding the synapse, <strong>receptors get over-stimulated</strong> and signaling becomes <strong>stronger and prolonged</strong>. This is what produces the felt effects: <strong>euphoria, empathy, increased energy, sensory enhancement</strong>.",
+  notebook: "Draw bright lightning bolts on the postsynaptic side to show <strong>strong, prolonged signaling</strong>. List the four classic effects: <strong>Euphoria · Empathy · Increased energy · Sensory enhancement</strong>.",
+  setup() {
+    clearField();
+    const nts = [];
+    for (let i = 0; i < 38; i++) {
+      const n = new NT(PRE_MEM_X + 10 + Math.random() * (POST_MEM_X - PRE_MEM_X - 20), ACT_TOP + 15 + Math.random() * (ACT_BOT - ACT_TOP - 30));
+      nts.push(n);
+    }
+    const mdmas = [];
+    for (let i = 0; i < 8; i++) {
+      const m = new MDMA(290 + Math.random() * (PRE_MEM_X - 320), ACT_TOP + 30 + Math.random() * (ACT_BOT - ACT_TOP - 60));
+      m.confine = 'terminal';
+      mdmas.push(m);
+    }
+    sceneLocal = {
+      nts, mdmas,
+      receptors: RECEPTOR_YS.map(y => ({ y, bound: 0 })),
+      cycleT: 0,
+      sparkT: 0
+    };
+  },
+  update(dt) {
+    sceneLocal.cycleT += dt;
+    sceneLocal.sparkT += dt;
+    sceneLocal.mdmas.forEach(m => m.update(dt));
+    sceneLocal.receptors.forEach((r, i) => {
+      // Always bound · strong signal
+      r.bound = lerp(r.bound, 1, 0.04);
+    });
+    // Replenish serotonin so the cleft stays full
+    if (Math.random() < 0.08 && sceneLocal.nts.length < 50) {
+      const n = new NT(PRE_MEM_X + 10, ACT_TOP + 15 + Math.random() * (ACT_BOT - ACT_TOP - 30));
+      n.vx = 0.4; sceneLocal.nts.push(n);
+    }
+    // some bind to receptors visually
+    if (Math.random() < 0.04) {
+      const r = sceneLocal.receptors[Math.floor(Math.random() * sceneLocal.receptors.length)];
+      const free = sceneLocal.nts.find(n => n.state === 'free' && Math.abs(n.y - r.y) < 50);
+      if (free) free.setTransit({ x: POST_MEM_X - 10, y: r.y }, 1.4 / 1000, 'receptor', r);
+    }
+    sceneLocal.nts.forEach(n => n.update(dt));
+    // recycle bound NTs that have been bound a while
+    sceneLocal.nts.forEach(n => {
+      if (n.state === 'bound' && n.bondT > 1200) {
+        n.state = 'recycled';
+      }
+    });
+    sceneLocal.nts = sceneLocal.nts.filter(n => n.state !== 'recycled');
+  },
+  draw(ctx, t) {
+    ctx.fillStyle = '#0a0a0a';
+    ctx.fillRect(0, 0, W, H);
+    drawPresynapticTerminal(ctx);
+    drawPostsynapticDendrite(ctx);
+
+    VESICLE_POSITIONS.slice(0, 5).forEach((p, i) => drawVesicle(ctx, p.x, p.y, 14, 0, { ntCount: 2 }));
+    CA_CHANNEL_YS.forEach(y => drawCalciumChannel(ctx, y, 0));
+    TRANS_YS.forEach(y => drawTransporter(ctx, y, 0.8, t, { reversed: true }));
+    sceneLocal.receptors.forEach(r => drawReceptor(ctx, r.y, r.bound));
+    sceneLocal.mdmas.forEach(m => m.draw(ctx));
+    sceneLocal.nts.forEach(n => n.draw(ctx));
+
+    // Lightning bolts on postsynaptic side
+    const phase = (sceneLocal.sparkT % 1200) / 1200;
+    sceneLocal.receptors.forEach((r, i) => {
+      if (r.bound > 0.6) {
+        const strength = 0.5 + Math.sin(sceneLocal.sparkT / 200 + i) * 0.4;
+        drawSignalBolt(ctx, POST_MEM_X + 18, r.y, POST_MEM_X + 120 + Math.random() * 30, r.y + (Math.random() - 0.5) * 20, Math.max(0.3, strength));
+      }
+    });
+
+    ctx.save();
+    ctx.fillStyle = '#ffd166';
+    ctx.font = '900 22px -apple-system, system-ui';
+    ctx.textAlign = 'center';
+    ctx.fillText('STRONGER & PROLONGED SIGNALING', 540, 60);
+
+    // Effects box (right side)
+    const ex = 1180, ey = 130;
+    ctx.fillStyle = 'rgba(244, 114, 182, 0.10)';
+    ctx.strokeStyle = 'rgba(244, 114, 182, 0.45)';
+    ctx.lineWidth = 1.5;
+    roundRect(ctx, ex, ey, 260, 220, 12);
+    ctx.fill(); ctx.stroke();
+    ctx.fillStyle = C_MDMA;
+    ctx.font = '800 13px -apple-system, system-ui';
+    ctx.textAlign = 'left';
+    ctx.fillText('EFFECTS', ex + 16, ey + 28);
+    ctx.fillStyle = 'rgba(245, 245, 245, 0.92)';
+    ctx.font = '500 14px -apple-system, system-ui';
+    const effects = ['• Euphoria', '• Empathy', '• Increased energy', '• Sensory enhancement'];
+    effects.forEach((e, i) => ctx.fillText(e, ex + 16, ey + 60 + i * 32));
+    ctx.restore();
+  }
+};
+
+// =====================================================
+//  SCENE 7: Tolerance · Brain Adapts
+// =====================================================
+const sceneTolerance = {
+  phase: 'Step 7: Tolerance · Brain Adapts',
+  phaseColor: '#fb923c',
+  notes: "With repeated MDMA use, the brain protects itself by <strong>down-regulating</strong>. It makes <strong>less serotonin</strong>, removes <strong>SERT transporters</strong>, and reduces or weakens <strong>receptors</strong>. The same dose of MDMA produces a weaker effect. This is <strong>tolerance</strong>.",
+  notebook: "Redraw the synapse with FEWER vesicles, FEWER transporters, and FEWER (or smaller) receptors. Write: <strong>Tolerance = need more MDMA to feel the same thing</strong>.",
+  setup() {
+    clearField();
+    sceneLocal = {
+      vesicles: [
+        new Vesicle(420, 280, { r: 14, ntCount: 2 }),
+        new Vesicle(560, 380, { r: 14, ntCount: 2 }),
+        new Vesicle(490, 220, { r: 12, ntCount: 1 })
+      ],
+      cycleT: 0,
+      shrinkT: 0
+    };
+  },
+  update(dt) {
+    sceneLocal.cycleT += dt;
+    sceneLocal.shrinkT = Math.min(1, sceneLocal.shrinkT + dt / 1800);
+    sceneLocal.vesicles.forEach(v => v.update(dt));
+  },
+  draw(ctx, t) {
+    ctx.fillStyle = '#0a0a0a';
+    ctx.fillRect(0, 0, W, H);
+    drawPresynapticTerminal(ctx);
+    drawPostsynapticDendrite(ctx);
+
+    sceneLocal.vesicles.forEach(v => v.draw(ctx));
+    CA_CHANNEL_YS.forEach(y => drawCalciumChannel(ctx, y, 0));
+    // Only one transporter, dimmed
+    drawTransporter(ctx, 325, 0.2, t);
+    // Three small receptors instead of five
+    drawReceptor(ctx, 260, 0, { size: 0.7 });
+    drawReceptor(ctx, 325, 0, { size: 0.7 });
+    drawReceptor(ctx, 390, 0, { size: 0.7 });
+
+    // Faded ghost positions for the missing parts
+    ctx.save();
+    ctx.globalAlpha = 0.18;
+    [275, 375].forEach(y => {
+      if (y !== 325) drawTransporter(ctx, y, 0, t);
+    });
+    [285, 365].forEach(y => drawReceptor(ctx, y, 0, { size: 0.6 }));
+    ctx.restore();
+
+    ctx.save();
+    ctx.fillStyle = '#fb923c';
+    ctx.font = '900 22px -apple-system, system-ui';
+    ctx.textAlign = 'center';
+    ctx.fillText('TOLERANCE: brain down-regulates', 540, 50);
+    ctx.font = '500 13px -apple-system, system-ui';
+    ctx.fillStyle = 'rgba(251, 146, 60, 0.85)';
+    ctx.fillText('less serotonin · fewer transporters · fewer receptors', 540, 74);
+
+    // Compensation list (right side)
+    const ex = 1180, ey = 130;
+    ctx.fillStyle = 'rgba(251, 146, 60, 0.10)';
+    ctx.strokeStyle = 'rgba(251, 146, 60, 0.45)';
+    ctx.lineWidth = 1.5;
+    roundRect(ctx, ex, ey, 280, 250, 12);
+    ctx.fill(); ctx.stroke();
+    ctx.fillStyle = '#fb923c';
+    ctx.font = '800 13px -apple-system, system-ui';
+    ctx.textAlign = 'left';
+    ctx.fillText('OVER TIME', ex + 16, ey + 28);
+    ctx.fillStyle = 'rgba(245, 245, 245, 0.92)';
+    ctx.font = '500 13px -apple-system, system-ui';
+    const items = ['• Brain makes less serotonin', '• Fewer SERT transporters', '• Fewer / weaker receptors', '• Reduced vesicle release', '• Result: NEED MORE for same effect'];
+    items.forEach((e, i) => ctx.fillText(e, ex + 16, ey + 60 + i * 30));
+    ctx.restore();
+
+    drawLabel(ctx, 'fewer vesicles', 280, 110, 420, 240, '#ffd166');
+    drawLabel(ctx, 'fewer receptors', 1100, 540, 880, 390, C_RECEPTOR);
+    drawLabel(ctx, 'fewer transporters', 620, 540, 720, 325, C_TRANS);
+  }
+};
+
+// =====================================================
+//  SCENE 8: Withdrawal · Empty Terminal, Weak Signal
+// =====================================================
+const sceneWithdrawal = {
+  phase: 'Step 8: Withdrawal',
+  phaseColor: '#7dd3fc',
+  notes: "When the drug is removed, the brain is left <strong>depleted and out of balance</strong>. Serotonin stores are very low. Few transporters and receptors remain. Neurons communicate poorly. The brain needs <strong>days to weeks</strong> to rebuild (and severe cases can take <strong>weeks to months</strong>). This is <strong>withdrawal</strong>.",
+  notebook: "Sketch a nearly EMPTY presynaptic terminal. Draw a weak, wavy signal across the synapse. List the withdrawal symptoms: <strong>low mood, anxiety, fatigue, irritability, trouble sleeping, poor concentration, reduced appetite, cravings</strong>.",
+  setup() {
+    clearField();
+    sceneLocal = { cycleT: 0, faintNT: null };
+  },
+  update(dt) {
+    sceneLocal.cycleT += dt;
+    if (!sceneLocal.faintNT || sceneLocal.faintNT.x > POST_MEM_X - 30) {
+      sceneLocal.faintNT = { x: PRE_MEM_X + 8, y: MID + (Math.random() - 0.5) * 30, vx: 0.4 + Math.random() * 0.2 };
+    } else {
+      sceneLocal.faintNT.x += sceneLocal.faintNT.vx;
+    }
+  },
+  draw(ctx, t) {
+    ctx.fillStyle = '#0a0a0a';
+    ctx.fillRect(0, 0, W, H);
+    drawPresynapticTerminal(ctx);
+    drawPostsynapticDendrite(ctx);
+
+    // Just one tiny vesicle
+    drawVesicle(ctx, 480, 320, 11, 0, { ntCount: 1 });
+
+    CA_CHANNEL_YS.forEach(y => drawCalciumChannel(ctx, y, 0));
+    // Single faint transporter
+    ctx.save();
+    ctx.globalAlpha = 0.55;
+    drawTransporter(ctx, 325, 0, t);
+    ctx.restore();
+    // Two small faint receptors
+    ctx.save();
+    ctx.globalAlpha = 0.55;
+    drawReceptor(ctx, 290, 0, { size: 0.55 });
+    drawReceptor(ctx, 360, 0, { size: 0.55 });
+    ctx.restore();
+
+    // Weak yellow signal across cleft
+    drawWeakSignal(ctx, PRE_MEM_X + 6, MID, POST_MEM_X - 6, MID, sceneLocal.cycleT);
+
+    // Single faint NT particle drifting
+    if (sceneLocal.faintNT) {
+      ctx.save();
+      ctx.globalAlpha = 0.55;
+      const f = sceneLocal.faintNT;
+      const cg = ctx.createRadialGradient(f.x - 2, f.y - 2, 0, f.x, f.y, 6);
+      cg.addColorStop(0, 'rgba(255,255,255,0.7)');
+      cg.addColorStop(0.4, C_NT);
+      cg.addColorStop(1, '#1e7fb8');
+      ctx.fillStyle = cg;
+      ctx.beginPath(); ctx.arc(f.x, f.y, 5, 0, Math.PI * 2); ctx.fill();
+      ctx.restore();
+    }
+
+    ctx.save();
+    ctx.fillStyle = '#7dd3fc';
+    ctx.font = '900 22px -apple-system, system-ui';
+    ctx.textAlign = 'center';
+    ctx.fillText('WITHDRAWAL: brain depleted', 540, 50);
+    ctx.font = '500 13px -apple-system, system-ui';
+    ctx.fillStyle = 'rgba(125, 211, 252, 0.85)';
+    ctx.fillText('low serotonin · weak signaling · system still out of balance', 540, 74);
+
+    // Symptoms box
+    const ex = 1180, ey = 110;
+    ctx.fillStyle = 'rgba(125, 211, 252, 0.10)';
+    ctx.strokeStyle = 'rgba(125, 211, 252, 0.45)';
+    ctx.lineWidth = 1.5;
+    roundRect(ctx, ex, ey, 280, 380, 12);
+    ctx.fill(); ctx.stroke();
+    ctx.fillStyle = '#7dd3fc';
+    ctx.font = '800 13px -apple-system, system-ui';
+    ctx.textAlign = 'left';
+    ctx.fillText('WITHDRAWAL SYMPTOMS', ex + 16, ey + 28);
+    ctx.fillStyle = 'rgba(245, 245, 245, 0.92)';
+    ctx.font = '500 13px -apple-system, system-ui';
+    const items = ['• Low mood / depression', '• Anxiety', '• Fatigue', '• Irritability', '• Trouble sleeping', '• Poor concentration', '• Reduced appetite', '• Cravings'];
+    items.forEach((e, i) => ctx.fillText(e, ex + 16, ey + 58 + i * 28));
+
+    // Duration line
+    ctx.fillStyle = 'rgba(125, 211, 252, 0.85)';
+    ctx.font = '600 11px -apple-system, system-ui';
+    ctx.fillText('Days to weeks. Severe: weeks to months.', ex + 16, ey + 358);
+    ctx.restore();
+  }
+};
+
+// =====================================================
+//  SCENE 9: Summary
+// =====================================================
+const sceneSummary = {
+  phase: 'Step 9: Know the Science',
+  phaseColor: '#a5b4fc',
+  notes: "All four phases stacked together: the <strong>normal synapse</strong>, the <strong>MDMA flood</strong>, the brain's <strong>tolerance adaptation</strong>, and the <strong>withdrawal</strong> that follows. The story is one of a brain pushed hard and then taking time to recover.",
+  notebook: "In one sentence each, summarize what happens in each of the four phases. Then write one thing you would want a friend to know before making any decision about MDMA.",
+  setup() {
+    clearField();
+    sceneLocal = { cycleT: 0 };
+  },
+  update(dt) {
+    sceneLocal.cycleT += dt;
+  },
+  draw(ctx, t) {
+    ctx.fillStyle = '#0a0a0a';
+    ctx.fillRect(0, 0, W, H);
+
+    // 4-panel mini comic: normal | flood | tolerance | withdrawal
+    const panels = [
+      { x: 30,   color: '#5eead4', title: '1. NORMAL',     sub: 'serotonin in, signal, reuptake' },
+      { x: 420,  color: '#f472b6', title: '2. MDMA FLOOD', sub: 'massive release + reversed SERT' },
+      { x: 810,  color: '#fb923c', title: '3. TOLERANCE',  sub: 'fewer vesicles, transporters, receptors' },
+      { x: 1200, color: '#7dd3fc', title: '4. WITHDRAWAL', sub: 'depleted; days to months to recover' }
+    ];
+
+    panels.forEach((p, i) => {
+      const x = p.x, y = 40, w = 370, h = 540;
+      ctx.save();
+      ctx.fillStyle = 'rgba(20, 22, 32, 0.85)';
+      ctx.strokeStyle = `${p.color}66`;
+      ctx.lineWidth = 1.5;
+      roundRect(ctx, x, y, w, h, 14);
+      ctx.fill(); ctx.stroke();
+
+      ctx.fillStyle = p.color;
+      ctx.font = '900 18px -apple-system, system-ui';
+      ctx.textAlign = 'left';
+      ctx.fillText(p.title, x + 18, y + 32);
+      ctx.fillStyle = 'rgba(245, 245, 245, 0.75)';
+      ctx.font = '500 12px -apple-system, system-ui';
+      ctx.fillText(p.sub, x + 18, y + 52);
+
+      // mini-synapse cartoon inside each panel
+      const pcx = x + w / 2;
+      const pcy = y + 270;
+      // pre membrane
+      ctx.fillStyle = 'rgba(212, 154, 141, 0.7)';
+      roundRect(ctx, pcx - 130, pcy - 90, 80, 180, 18);
+      ctx.fill();
+      // post membrane
+      ctx.fillStyle = 'rgba(125, 163, 214, 0.7)';
+      roundRect(ctx, pcx + 50, pcy - 90, 80, 180, 18);
+      ctx.fill();
+
+      // contents by panel
+      if (i === 0) {
+        // normal: vesicles, some serotonin in cleft, receptors
+        for (let j = 0; j < 3; j++) {
+          ctx.fillStyle = 'rgba(255, 220, 170, 0.95)';
+          ctx.beginPath(); ctx.arc(pcx - 100 + (j%2)*30, pcy - 40 + j*30, 10, 0, Math.PI * 2); ctx.fill();
+        }
+        for (let j = 0; j < 4; j++) {
+          ctx.fillStyle = C_NT;
+          ctx.beginPath(); ctx.arc(pcx - 30 + j*15, pcy - 20 + (j%2)*20, 4, 0, Math.PI * 2); ctx.fill();
+        }
+        for (let j = 0; j < 3; j++) {
+          ctx.fillStyle = C_RECEPTOR;
+          ctx.beginPath(); ctx.arc(pcx + 60, pcy - 50 + j*40, 6, 0, Math.PI * 2); ctx.fill();
+        }
+      } else if (i === 1) {
+        // flood: tons of NT + MDMA in terminal + bolts
+        for (let j = 0; j < 5; j++) {
+          ctx.fillStyle = C_MDMA;
+          ctx.beginPath(); ctx.arc(pcx - 100 + j*15, pcy - 40 + (j%2)*40, 6, 0, Math.PI * 2); ctx.fill();
+        }
+        for (let j = 0; j < 18; j++) {
+          ctx.fillStyle = C_NT;
+          ctx.beginPath(); ctx.arc(pcx - 45 + Math.random() * 90, pcy - 60 + Math.random() * 120, 4, 0, Math.PI * 2); ctx.fill();
+        }
+        for (let j = 0; j < 3; j++) {
+          ctx.fillStyle = '#ffd166';
+          ctx.fillRect(pcx + 55, pcy - 50 + j*40, 18, 4);
+          ctx.fillRect(pcx + 60, pcy - 56 + j*40, 4, 14);
+        }
+      } else if (i === 2) {
+        // tolerance: sparse everything
+        ctx.fillStyle = 'rgba(255, 220, 170, 0.7)';
+        ctx.beginPath(); ctx.arc(pcx - 90, pcy, 7, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = C_NT;
+        ctx.beginPath(); ctx.arc(pcx - 10, pcy, 3, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = C_RECEPTOR;
+        ctx.beginPath(); ctx.arc(pcx + 60, pcy - 20, 4, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(pcx + 60, pcy + 20, 4, 0, Math.PI * 2); ctx.fill();
+      } else {
+        // withdrawal: nothing in cleft, faint wavy line
+        ctx.strokeStyle = 'rgba(255, 209, 102, 0.4)';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        for (let xx = 0; xx <= 60; xx += 4) {
+          const ya = pcy + Math.sin(xx / 6 + sceneLocal.cycleT / 400) * 5;
+          if (xx === 0) ctx.moveTo(pcx - 30 + xx, ya); else ctx.lineTo(pcx - 30 + xx, ya);
+        }
+        ctx.stroke();
+        ctx.fillStyle = 'rgba(176, 132, 255, 0.5)';
+        ctx.beginPath(); ctx.arc(pcx + 60, pcy, 3.5, 0, Math.PI * 2); ctx.fill();
+      }
+      ctx.restore();
+    });
+
+    // Caption strip
+    ctx.save();
+    ctx.fillStyle = '#a5b4fc';
+    ctx.font = '900 18px -apple-system, system-ui';
+    ctx.textAlign = 'center';
+    ctx.fillText('the full arc · how MDMA changes serotonin signaling', W / 2, 615);
+    ctx.restore();
+  }
+};
+
+// =====================================================
+//  Scenes list
+// =====================================================
+const scenes = [
+  sceneIntro,         // 1
+  sceneNormalRelease, // 2
+  sceneNormalCycle,   // 3
+  sceneMDMAEnters,    // 4
+  sceneMDMAFlood,     // 5
+  sceneEffects,       // 6
+  sceneTolerance,     // 7
+  sceneWithdrawal,    // 8
+  sceneSummary        // 9
+];
+
+// =====================================================
+//  UI
+// =====================================================
+const phaseNameEl = document.getElementById("phaseName");
+const notesEl = document.getElementById("notes");
+const stepHeadingEl = document.getElementById("stepHeading");
+const notebookTextEl = document.getElementById("notebookText");
+const stepIndicator = document.getElementById("stepIndicator");
+const prevBtn = document.getElementById("prevBtn");
+const nextBtn = document.getElementById("nextBtn");
+const resetBtn = document.getElementById("resetBtn");
+const closingPanel = document.getElementById("closingPanel");
+const footerTag = document.getElementById("footerTag");
+
+function pad2(n) { return n < 10 ? '0' + n : '' + n; }
+
+function setScene(i) {
+  currentSceneIdx = i;
+  animT = 0;
+  sceneFadeT = 0;
+  const s = scenes[i];
+  if (s.setup) s.setup();
+  phaseNameEl.textContent = s.phase;
+  phaseNameEl.style.color = s.phaseColor;
+  notesEl.innerHTML = s.notes;
+  stepHeadingEl.textContent = s.phase;
+  notebookTextEl.innerHTML = s.notebook;
+  stepIndicator.textContent = `${pad2(i + 1)} / ${pad2(scenes.length)}`;
+  prevBtn.disabled = i === 0;
+  nextBtn.disabled = i === scenes.length - 1;
+  nextBtn.textContent = i === scenes.length - 1 ? 'Done' : 'Next →';
+  // Show closing panel only on the last (summary) scene
+  if (i === scenes.length - 1) {
+    closingPanel.style.display = 'grid';
+    footerTag.style.display = 'block';
+  } else {
+    closingPanel.style.display = 'none';
+    footerTag.style.display = 'none';
+  }
+}
+
+prevBtn.addEventListener("click", () => { if (currentSceneIdx > 0) setScene(currentSceneIdx - 1); });
+nextBtn.addEventListener("click", () => { if (currentSceneIdx < scenes.length - 1) setScene(currentSceneIdx + 1); });
+resetBtn.addEventListener("click", () => setScene(0));
+document.addEventListener("keydown", (e) => {
+  if (e.key === "ArrowRight" && currentSceneIdx < scenes.length - 1) setScene(currentSceneIdx + 1);
+  if (e.key === "ArrowLeft" && currentSceneIdx > 0) setScene(currentSceneIdx - 1);
+});
+
+// =====================================================
+//  Main loop
+// =====================================================
+let lastTs = null;
+function tick(ts) {
+  if (lastTs == null) lastTs = ts;
+  const dt = Math.min(50, ts - lastTs);
+  lastTs = ts;
+  animT += dt;
+  sceneFadeT = Math.min(1, sceneFadeT + dt / 600);
+  const s = scenes[currentSceneIdx];
+  if (s.update) s.update(dt);
+  ctx.save();
+  ctx.fillStyle = '#0a0a0a';
+  ctx.fillRect(0, 0, W, H);
+  ctx.globalAlpha = sceneFadeT;
+  s.draw(ctx, animT);
+  ctx.restore();
+  requestAnimationFrame(tick);
+}
+
+setScene(0);
+requestAnimationFrame(tick);
+</script>
+</body>
+</html>

@@ -56,10 +56,27 @@
     letter-spacing: 1px;
   }
   main {
-    max-width: 1200px;
+    max-width: 1320px;
     margin: 0 auto;
-    padding: 0 32px 20px;
+    padding: 0 32px 16px;
+    min-height: calc(100vh - 60px);
+    display: flex;
+    flex-direction: column;
+    justify-content: safe center;
   }
+  .workspace {
+    width: 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(330px, 0.95fr);
+    gap: 24px;
+    align-items: center;
+  }
+  .side {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .side .content { margin-top: 0; }
   .brand-banner {
     margin: 0 auto 14px;
     padding: 10px 18px;
@@ -279,6 +296,10 @@
   }
   button.primary:hover { filter: brightness(1.08); }
   .btn-group { display: flex; gap: 10px; }
+  @media (max-width: 920px) {
+    main { min-height: 0; padding-bottom: 24px; justify-content: flex-start; }
+    .workspace { grid-template-columns: 1fr; align-items: stretch; }
+  }
   @media (max-width: 720px) {
     .phase-bar { grid-template-columns: 1fr; }
     .sim-controls { justify-content: space-between; }
@@ -299,25 +320,37 @@
     <div>Understanding the brain. Empowering choices. <strong>Active ingredient:</strong> 3,4-methylenedioxymethamphetamine (MDMA).</div>
   </div>
 
-  <div class="stage">
-    <canvas id="canvas" width="1600" height="650"></canvas>
-    <div class="phase-bar">
-      <div class="phase-name" id="phaseName">Step 1</div>
-      <div class="sim-controls" id="simControls">
-        <button class="sim-btn" id="mdmaPlusBtn">+ Add MDMA</button>
-        <div class="sim-readout" id="simReadout">MDMA in system: <strong>0</strong></div>
+  <div class="workspace">
+    <div class="stage">
+      <canvas id="canvas" width="1600" height="650"></canvas>
+      <div class="phase-bar">
+        <div class="phase-name" id="phaseName">Step 1</div>
+        <div class="sim-controls" id="simControls">
+          <button class="sim-btn" id="mdmaPlusBtn">+ Add MDMA</button>
+          <div class="sim-readout" id="simReadout">MDMA in system: <strong>0</strong></div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="content">
-    <div class="notes-card">
-      <div class="step-heading" id="stepHeading">Step 1</div>
-      <p id="notes"></p>
-    </div>
-    <div class="notebook-prompt" id="notebookPrompt">
-      <div class="np-tag">✎ NOTES</div>
-      <div id="notebookText"></div>
+    <div class="side">
+      <div class="content">
+        <div class="notes-card">
+          <div class="step-heading" id="stepHeading">Step 1</div>
+          <p id="notes"></p>
+        </div>
+        <div class="notebook-prompt" id="notebookPrompt">
+          <div class="np-tag">✎ NOTES</div>
+          <div id="notebookText"></div>
+        </div>
+      </div>
+
+      <nav>
+        <button id="resetBtn">Start Over</button>
+        <div class="btn-group">
+          <button id="prevBtn">← Back</button>
+          <button id="nextBtn" class="primary">Next →</button>
+        </div>
+      </nav>
     </div>
   </div>
 
@@ -356,14 +389,6 @@
     <div>Informed choices lead to safer experiences.</div>
     <div style="margin-top:8px;font-size:12px;color:#94a3b8;">For help or more information: <a href="https://www.drugabuse.gov" target="_blank" rel="noopener">www.drugabuse.gov</a> · National Institute on Drug Abuse (NIDA)</div>
   </div>
-
-  <nav>
-    <button id="resetBtn">Start Over</button>
-    <div class="btn-group">
-      <button id="prevBtn">← Back</button>
-      <button id="nextBtn" class="primary">Next →</button>
-    </div>
-  </nav>
 </main>
 
 <script>
